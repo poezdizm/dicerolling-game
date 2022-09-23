@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.security;
+package ru.poezdizm.dicerollinggame.security.jwt;
 
 import java.util.Date;
 
@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.*;
+import ru.poezdizm.dicerollinggame.security.details.UserDetailsImpl;
 
 @Component
 public class JwtUtils {

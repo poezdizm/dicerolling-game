@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.poezdizm.dicerollinggame.model.JwtResponse;
+import ru.poezdizm.dicerollinggame.model.response.JwtResponse;
 import ru.poezdizm.dicerollinggame.model.LoginModel;
-import ru.poezdizm.dicerollinggame.model.MessageResponse;
-import ru.poezdizm.dicerollinggame.security.JwtUtils;
-import ru.poezdizm.dicerollinggame.security.UserDetailsImpl;
+import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
+import ru.poezdizm.dicerollinggame.security.jwt.JwtUtils;
+import ru.poezdizm.dicerollinggame.security.details.UserDetailsImpl;
 import ru.poezdizm.dicerollinggame.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

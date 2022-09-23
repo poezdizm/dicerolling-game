@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.security;
+package ru.poezdizm.dicerollinggame.security.jwt;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.model;
+package ru.poezdizm.dicerollinggame.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

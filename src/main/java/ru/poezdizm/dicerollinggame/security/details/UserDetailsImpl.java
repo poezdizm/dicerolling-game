@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.security;
+package ru.poezdizm.dicerollinggame.security.details;
 
 import java.util.Collection;
 import java.util.List;
