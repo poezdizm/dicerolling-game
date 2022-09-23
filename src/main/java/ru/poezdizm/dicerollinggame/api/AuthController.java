@@ -1,7 +1,6 @@
 package ru.poezdizm.dicerollinggame.api;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.poezdizm.dicerollinggame.model.JwtResponse;
 import ru.poezdizm.dicerollinggame.model.LoginModel;
 import ru.poezdizm.dicerollinggame.model.MessageResponse;
-import ru.poezdizm.dicerollinggame.model.RegistrationModel;
 import ru.poezdizm.dicerollinggame.security.JwtUtils;
 import ru.poezdizm.dicerollinggame.security.UserDetailsImpl;
 import ru.poezdizm.dicerollinggame.service.UserService;
@@ -50,15 +48,12 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                "Bearer",
-                userDetails.getId(),
-                userDetails.getUsername(),
-                roles));
+        return ResponseEntity.ok(JwtResponse.builder().token(jwt).id(userDetails.getId())
+                .username(userDetails.getUsername()).roles(roles).build());
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody RegistrationModel registrationModel) {
+    public ResponseEntity<?> registerUser(@RequestBody LoginModel registrationModel) {
         userService.registerUser(registrationModel);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

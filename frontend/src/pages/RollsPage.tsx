@@ -3,7 +3,6 @@ import {useRolls} from "../hooks/use-rolls";
 import RollHistory from "../components/RollHistory";
 import logo from "../logo.svg";
 import {IUser} from "../models/IUser";
-import axios from "axios";
 
 export function RollsPage() {
 

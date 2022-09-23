@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.Role;
 import ru.poezdizm.dicerollinggame.entity.User;
-import ru.poezdizm.dicerollinggame.model.RegistrationModel;
+import ru.poezdizm.dicerollinggame.model.LoginModel;
 import ru.poezdizm.dicerollinggame.repository.UserRepository;
 
 import java.util.Collections;
@@ -21,11 +21,9 @@ public class UserService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public boolean registerUser(RegistrationModel registrationModel) {
-        if (!registrationModel.getPassword().equals(registrationModel.getConfirm())) {
-            return false;
-        }
-        if (getUser(registrationModel.getUsername()) != null) {
+    public boolean registerUser(LoginModel registrationModel) {
+        if (registrationModel.getUsername().isBlank() || registrationModel.getPassword().isBlank() ||
+                getUser(registrationModel.getUsername()) != null) {
             return false;
         }
 

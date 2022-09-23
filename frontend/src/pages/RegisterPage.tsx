@@ -10,10 +10,10 @@ export function RegisterPage() {
     const [confirm, setConfirm] = useState("")
 
     async function register() {
-        await axios.post("http://localhost:8080/reg", {"username": username, "password": password, "confirm": confirm})
+        await axios.post("http://localhost:8080/reg", {"username": username, "password": password})
             .then(res => {
                 if (res.status === 200) {
-                    setSignedUp(res.data); // after signing up, set the state to true. This will trigger a re-render
+                    setSignedUp(res.data);
                 }
             })
     }
@@ -24,9 +24,8 @@ export function RegisterPage() {
                 <input type={"text"} onChange={event => setUsername(event.target.value)}/>
                 <input type={"password"} onChange={event => setPassword(event.target.value)}/>
                 <input type={"password"} onChange={event => setConfirm(event.target.value)}/>
-                <button disabled={username.length === 0 || password.length === 0} onClick={() => {
-                    register()
-                }}></button>
+                <button disabled={username.length === 0 || password.length === 0 || password !== confirm}
+                        onClick={() => {register()}}></button>
             </form>
             <p>{isSignedUp}</p>
         </div>
