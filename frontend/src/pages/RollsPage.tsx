@@ -1,21 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {useRolls} from "../hooks/use-rolls";
+import React from "react";
+import {useRolls} from "../service/hooks/use-rolls";
 import RollHistory from "../components/RollHistory";
 import logo from "../logo.svg";
-import {IUser} from "../models/IUser";
 
 export function RollsPage() {
 
-    const [user, setUser] = useState<IUser>()
     const {rolls} = useRolls()
-
-    useEffect(() => {
-        const loggedInUser = localStorage.getItem("user");
-        if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            setUser(foundUser);
-        }
-    }, []);
 
     return (
         <div className="App">

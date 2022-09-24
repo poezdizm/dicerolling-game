@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {IRollHistory} from "../models/IRollHistory";
-import axios from "axios";
+import {IRollHistory} from "../../models/IRollHistory";
+import http from "../../http-common";
+import {authHeader} from "./auth-header";
 
 export function useRolls() {
     const [rolls, setRolls] = useState<IRollHistory[]>([])
 
     async function fetchRolls() {
-        await axios.get('http://localhost:8080/rolls')
+        await http.get('/rolls', {headers: authHeader()})
             .then(response => setRolls(response.data))
     }
 
     useEffect(() => {
         fetchRolls()
-    })
+    }, [])
 
     return {rolls}
 }

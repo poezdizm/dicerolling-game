@@ -1,21 +1,22 @@
 import React, {useState} from "react";
-import axios from "axios";
+import AuthService from "../service/auth-service";
 
 export function RegisterPage() {
 
-    const [isSignedUp, setSignedUp] = useState("")
+    const [isSignedUp, setSignedUp] = useState(false)
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirm, setConfirm] = useState("")
 
     async function register() {
-        await axios.post("http://localhost:8080/reg", {"username": username, "password": password})
-            .then(res => {
-                if (res.status === 200) {
-                    setSignedUp(res.data);
+        await AuthService.login(username, password).then(
+            result => {
+                if (result !== "") {
+                    setSignedUp(true)
                 }
-            })
+            }
+        )
     }
 
     return (
@@ -27,7 +28,7 @@ export function RegisterPage() {
                 <button disabled={username.length === 0 || password.length === 0 || password !== confirm}
                         onClick={() => {register()}}></button>
             </form>
-            <p>{isSignedUp}</p>
+            {isSignedUp && <p>User registered successfully!</p>}
         </div>
     )
 }
