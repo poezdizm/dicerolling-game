@@ -10,7 +10,7 @@ export function RegisterPage() {
     const [confirm, setConfirm] = useState("")
 
     async function register() {
-        await AuthService.login(username, password).then(
+        await AuthService.register(username, password).then(
             result => {
                 if (result !== "") {
                     setSignedUp(true)

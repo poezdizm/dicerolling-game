@@ -1,22 +1,22 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import AuthService from "../service/auth-service";
+import {useNavigate} from "react-router-dom"
 
 export function LoginPage() {
 
-    const [isSignedIn, setSignedIn] = useState(false)
     const [error, setError] = useState(false)
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    const navigate = useNavigate();
+
     async function login() {
         await AuthService.login(username, password).then(
             result => {
                 if (result !== "") {
-                    setError(false)
-                    setSignedIn(true)
+                    navigate("/")
                 } else {
-                    setSignedIn(false)
                     setError(true)
                 }
             }
@@ -33,7 +33,6 @@ export function LoginPage() {
                     login()
                 }}></button>
             </form>
-            {isSignedIn && <p>User signed in successfully!</p>}
             {error && <p>Credentials are incorrect</p>}
         </div>
     )

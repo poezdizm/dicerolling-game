@@ -23,6 +23,10 @@ const logout = () => {
 const register = (username: string, password: string) => {
     return http.post("/auth/signup", {
         username, password
+    }).then(response => {
+        return response.data
+    }).catch(function (error) {
+        return ""
     });
 }
 
