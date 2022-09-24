@@ -2,6 +2,6 @@ import {ICellType} from "./ICellType";
 
 export interface ICell {
     id: number,
-    content: string,
-    type: ICellType
+    content?: string,
+    type?: ICellType
 }

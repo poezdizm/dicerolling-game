@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {useRolls} from "../service/hooks/use-rolls";
 import RollHistory from "../components/RollHistory";
 import logo from "../logo.svg";

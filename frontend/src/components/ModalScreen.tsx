@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Modal} from "react-bootstrap";
+import {Modal} from "react-bootstrap";
 
 interface ModalProps {
     children?: React.ReactNode,
@@ -25,9 +25,6 @@ export function ModalScreen(props: ModalProps) {
             <Modal.Body>
                 {props.children}
             </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Ok</Button>
-            </Modal.Footer>
         </Modal>
     )
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import './styles.scss';
 import {Route, Routes} from "react-router-dom";
 import {RollsPage} from "./pages/RollsPage";
 import {Navigation} from "./components/Navigation";

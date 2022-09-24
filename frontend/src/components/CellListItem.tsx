@@ -8,17 +8,11 @@ interface CellProps {
 
 function CellListItem(props: CellProps) {
     const itemStyle = {
-        backgroundColor: props.cell.type.color,
-        maxHeight: 45,
-        overflow: 'hidden',
-        flexShrink: 1,
-        textOverflow: 'ellipsis',
-        fontWeight: 14,
-        fontSize: 20
+        backgroundColor: props.cell.type ? props.cell.type.color : '#FFFFFF',
     }
 
     return (
-        <ListGroup.Item style={itemStyle}>{props.cell.content}</ListGroup.Item>
+        <ListGroup.Item style={itemStyle} className={"cell-list-item"}>{props.cell.content}</ListGroup.Item>
     )
 }
 

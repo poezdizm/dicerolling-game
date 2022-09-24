@@ -1,0 +1,36 @@
+.basic-container {
+  padding-bottom: 150px;
+}
+
+.cell-list {
+  height: 500px !important;
+  padding-left: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.cell-list-item {
+  max-height: 45px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 14;
+  font-size: 20px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+
+  &:hover {
+    background: #555;
+  }
+}

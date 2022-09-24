@@ -24,6 +24,10 @@ public class CellService {
         return cellRepository.findAll().stream().map(CellService::mapCell).toList();
     }
 
+    public List<CellTypeModel> getAllCellTypes() {
+        return cellTypeRepository.findAll().stream().map(CellService::mapType).toList();
+    }
+
     public CellModel getCellById(Long id) {
         return mapCell(findCellEntity(id));
     }
