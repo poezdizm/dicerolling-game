@@ -1,11 +1,15 @@
 .basic-container {
   padding-bottom: 150px;
+
+  input::placeholder {
+    color: #c0c0c0;
+  }
 }
 
 .cell-list {
-  height: 500px !important;
-  padding-left: 10px;
-  overflow-y: scroll;
+  height: 470px !important;
+  padding-right: 10px;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
