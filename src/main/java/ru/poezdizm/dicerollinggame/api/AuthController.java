@@ -34,6 +34,7 @@ public class AuthController {
 
     private final JwtUtils jwtUtils;
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @PostMapping("/signin")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginModel loginModel) {
 
@@ -53,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody LoginModel registrationModel) {
+    public ResponseEntity<MessageResponse> registerUser(@RequestBody LoginModel registrationModel) {
         userService.registerUser(registrationModel);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

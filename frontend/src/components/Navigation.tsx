@@ -3,10 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Nav, Navbar} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 
-export function Navigation() {
+export function Navigation(props: any) {
 
-    const user = JSON.parse(localStorage.getItem("user") || '{}')
-    const isAuth = user && user.token
+    const isAuth = props.user && props.user.token
 
     return (
         <Navbar bg="light" expand="lg">

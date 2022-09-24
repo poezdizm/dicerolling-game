@@ -1,26 +1,33 @@
 import React, {useState} from "react";
 import AuthService from "../service/auth-service";
-import {useNavigate} from "react-router-dom"
+import {Navigate} from "react-router-dom";
 
 export function LoginPage() {
 
+    const user = JSON.parse(localStorage.getItem("user") || '{}')
+    const [isSignedIn, setSignedIn] = useState(user && user.token)
     const [error, setError] = useState(false)
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const navigate = useNavigate();
 
     async function login() {
         await AuthService.login(username, password).then(
             result => {
                 if (result !== "") {
-                    navigate("/")
+                    setError(false)
+                    setSignedIn(true)
                 } else {
+                    setSignedIn(false)
                     setError(true)
                 }
             }
         )
+    }
+
+    if (isSignedIn) {
+        return <Navigate to="/" />
     }
 
     return (
