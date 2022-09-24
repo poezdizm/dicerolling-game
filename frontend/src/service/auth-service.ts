@@ -30,11 +30,17 @@ const register = (username: string, password: string) => {
     });
 }
 
+const isSignedIn = () => {
+    let user = JSON.parse(localStorage.getItem("user") || '{}');
+    return user && user.token;
+}
+
 
 const AuthService = {
     login,
     logout,
-    register
+    register,
+    isSignedIn
 };
 
 export default AuthService;

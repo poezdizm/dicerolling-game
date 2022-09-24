@@ -15,7 +15,12 @@ export function Navigation(props: any) {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/">Rolls</Nav.Link>
-                        {isAuth ? <Nav.Link href="#" onClick={() => AuthService.logout()}>Logout</Nav.Link> :
+                        {isAuth ?
+                            <>
+                                <Nav.Link href="/add">Add Cells</Nav.Link>
+                                <Nav.Link href="#" onClick={() => AuthService.logout()}>Logout</Nav.Link>
+                            </>
+                            :
                             <>
                                 <Nav.Link href="/reg">Signup</Nav.Link>
                                 <Nav.Link href="/login">Login</Nav.Link>

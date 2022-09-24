@@ -4,8 +4,7 @@ import {Navigate} from "react-router-dom";
 
 export function LoginPage() {
 
-    const user = JSON.parse(localStorage.getItem("user") || '{}')
-    const [isSignedIn, setSignedIn] = useState(user && user.token)
+    const [isSignedIn, setSignedIn] = useState(AuthService.isSignedIn)
     const [error, setError] = useState(false)
 
     const [username, setUsername] = useState("")

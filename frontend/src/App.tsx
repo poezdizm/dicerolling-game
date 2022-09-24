@@ -5,6 +5,7 @@ import {RollsPage} from "./pages/RollsPage";
 import {Navigation} from "./components/Navigation";
 import {LoginPage} from "./pages/LoginPage";
 import {RegisterPage} from "./pages/RegisterPage";
+import {AddCellsPage} from "./pages/AddCellsPage";
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/" element={<RollsPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/reg" element={<RegisterPage/>}/>
+                <Route path="/add" element={<AddCellsPage/>}/>
             </Routes>
         </>
     );
