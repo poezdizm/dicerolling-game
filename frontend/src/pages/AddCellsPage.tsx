@@ -1,15 +1,18 @@
 import React, {useState} from "react";
-import logo from "../logo.svg";
 import {ModalScreen} from "../components/ModalScreen";
-import {Button} from "react-bootstrap";
+import {Button, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 import {Navigate} from "react-router-dom";
+import {useCells} from "../service/hooks/use-cells";
+import CellListItem from "../components/CellListItem";
 
 export function AddCellsPage() {
 
-    const [isSignedIn, setSignedIn] = useState(AuthService.isSignedIn)
+    const isSignedIn = AuthService.isSignedIn
 
     const [modalShow, setModalShow] = useState(false);
+
+    const {cells} = useCells();
 
     if (!isSignedIn) {
         return <Navigate to="/login" />
@@ -19,12 +22,24 @@ export function AddCellsPage() {
         <>
             <div className="App">
                 <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <div className="container mx-auto max-w-2xl pt-5">
-                        <Button variant="primary" onClick={() => setModalShow(true)}>
-                            Launch vertically centered modal ({modalShow ? "True" : "False"})
-                        </Button>
-                    </div>
+                    <Container>
+                        <Row>
+                            <Col sm={1} />
+                            <Col sm={7}>
+                                <Button variant="primary" onClick={() => setModalShow(true)}>
+                                    Launch vertically centered modal ({modalShow ? "True" : "False"})
+                                </Button>
+                                <Card className="mt-4">
+                                    <Card.Body>
+                                        <ListGroup>
+                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id} />)}
+                                        </ListGroup>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col sm={3}></Col>
+                        </Row>
+                    </Container>
                 </header>
             </div>
 

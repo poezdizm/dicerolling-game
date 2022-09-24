@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.Role;
-import ru.poezdizm.dicerollinggame.entity.User;
-import ru.poezdizm.dicerollinggame.model.LoginModel;
+import ru.poezdizm.dicerollinggame.entity.UserEntity;
+import ru.poezdizm.dicerollinggame.model.UserModel;
 import ru.poezdizm.dicerollinggame.repository.UserRepository;
 
 import java.util.Collections;
@@ -17,25 +17,25 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
 
-    public User getUser(String username) {
+    public UserEntity getUser(String username) {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public boolean registerUser(LoginModel registrationModel) {
+    public boolean registerUser(UserModel registrationModel) {
         if (registrationModel.getUsername().isBlank() || registrationModel.getPassword().isBlank() ||
                 getUser(registrationModel.getUsername()) != null) {
             return false;
         }
 
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
 
-        user.setUsername(registrationModel.getUsername());
-        user.setPassword(registrationModel.getPassword());
-        user.setRoles(Collections.singleton(Role.USER));
+        userEntity.setUsername(registrationModel.getUsername());
+        userEntity.setPassword(registrationModel.getPassword());
+        userEntity.setRoles(Collections.singleton(Role.USER));
 
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
 
-        userRepository.save(user);
+        userRepository.save(userEntity);
         return true;
     }
 

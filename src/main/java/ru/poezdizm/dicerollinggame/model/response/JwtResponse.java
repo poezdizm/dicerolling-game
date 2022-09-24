@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class JwtResponse {
     private String token;
-    private Long id;
+    private Integer id;
     private String username;
     private List<String> roles;
 

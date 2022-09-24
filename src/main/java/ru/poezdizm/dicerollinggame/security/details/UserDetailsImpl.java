@@ -12,14 +12,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import ru.poezdizm.dicerollinggame.entity.User;
+import ru.poezdizm.dicerollinggame.entity.UserEntity;
 
 @Getter
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private Integer id;
 
     private String username;
 
@@ -28,15 +28,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static UserDetailsImpl build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream()
+    public static UserDetailsImpl build(UserEntity userEntity) {
+        List<GrantedAuthority> authorities = userEntity.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
+                userEntity.getId(),
+                userEntity.getUsername(),
+                userEntity.getPassword(),
                 authorities);
     }
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.poezdizm.dicerollinggame.model.response.JwtResponse;
-import ru.poezdizm.dicerollinggame.model.LoginModel;
+import ru.poezdizm.dicerollinggame.model.UserModel;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.security.jwt.JwtUtils;
 import ru.poezdizm.dicerollinggame.security.details.UserDetailsImpl;
@@ -36,7 +36,7 @@ public class AuthController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @PostMapping("/signin")
-    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginModel loginModel) {
+    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody UserModel loginModel) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginModel.getUsername(), loginModel.getPassword()));
@@ -54,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<MessageResponse> registerUser(@RequestBody LoginModel registrationModel) {
+    public ResponseEntity<MessageResponse> registerUser(@RequestBody UserModel registrationModel) {
         userService.registerUser(registrationModel);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
