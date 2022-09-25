@@ -31,6 +31,10 @@ public class CellService {
         return cellTypeRepository.findAll().stream().map(CellService::mapType).toList();
     }
 
+    public long countCellTypes() {
+        return cellTypeRepository.count();
+    }
+
     public CellModel getCellById(Long id) {
         return mapCell(findCellEntity(id));
     }
@@ -40,7 +44,7 @@ public class CellService {
         return cellRepository.findById(id).orElse(new CellEntity());
     }
 
-    private CellTypeEntity findCellTypeEntity(CellTypeModel model) {
+    public CellTypeEntity findCellTypeEntity(CellTypeModel model) {
         if (model == null || model.getId() == null) return cellTypeRepository.getByLabel(DEFAULT_LABEL);
         return cellTypeRepository.findById(model.getId()).orElse(cellTypeRepository.getByLabel(DEFAULT_LABEL));
     }
