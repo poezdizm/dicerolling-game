@@ -5,7 +5,7 @@ import {authHeader} from "./hooks/auth-header";
 const saveCell = (cell: ICell) => {
     return http.post("/cells", cell, {headers: authHeader()})
         .then(response => {
-            return "";
+            return response;
         })
         .catch(function (error) {
             return error.response.data.message

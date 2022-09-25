@@ -1,0 +1,1 @@
+alter table cell add column created_at timestamp not null default NOW();

@@ -6,6 +6,10 @@
   }
 }
 
+.hidden {
+  display: none;
+}
+
 .cell-list {
   height: 470px !important;
   padding-right: 10px;
@@ -15,11 +19,23 @@
 
 .cell-list-item {
   max-height: 45px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-weight: 14;
   font-size: 20px;
+
+  .content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .badge {
+    float:left;
+    margin-top: 2px;
+    background-color: #b0b0b0 !important;
+    &:hover {
+      background-color: #7e7e7e !important;
+    }
+  }
 }
 
 ::-webkit-scrollbar {

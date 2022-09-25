@@ -10,6 +10,8 @@ import ru.poezdizm.dicerollinggame.model.CellTypeModel;
 import ru.poezdizm.dicerollinggame.repository.CellRepository;
 import ru.poezdizm.dicerollinggame.repository.CellTypeRepository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -22,7 +24,7 @@ public class CellService {
     private static final String DEFAULT_LABEL = "Default";
 
     public List<CellModel> getAllCells() {
-        return cellRepository.findAll().stream().map(CellService::mapCell).toList();
+        return cellRepository.findAllByOrderByTimeOfCreationDesc().stream().map(CellService::mapCell).toList();
     }
 
     public List<CellTypeModel> getAllCellTypes() {
@@ -48,6 +50,9 @@ public class CellService {
         CellEntity entity = findCellEntity(model.getId());
         CellTypeEntity typeEntity = findCellTypeEntity(model.getType());
 
+        if (entity.getTimeOfCreation() == null) {
+            entity.setTimeOfCreation(Timestamp.from(Instant.now()));
+        }
         entity.setContent(model.getContent());
         entity.setType(typeEntity);
 

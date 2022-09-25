@@ -65,8 +65,15 @@ export function AddCellsPage() {
 
     function handleChange() {
         fetchCells()
+        setQuery("")
         setModalShow(false)
     }
+
+    const openEditModal = (cell: ICell) => {
+        setCurrentCell(cell)
+        setModalShow(true)
+    }
+
 
     return (
         <>
@@ -93,7 +100,7 @@ export function AddCellsPage() {
                                         </Form>
                                         <div className="cell-list" ref={listElem}>
                                         <ListGroup>
-                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id} />)}
+                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id} openEdit={openEditModal}/>)}
                                         </ListGroup>
                                         </div>
                                     </Card.Body>
@@ -105,7 +112,8 @@ export function AddCellsPage() {
                 </header>
             </div>
 
-            <ModalScreen isOpen={modalShow} title={"Add new Cell"} onHide={() => setModalShow(false)}
+            <ModalScreen isOpen={modalShow} title={currentCell.id === 0 ? "Add new Cell" : "Edit Cell"}
+                         onHide={() => setModalShow(false)}
                          children={<EditCellForm cell={currentCell} cellTypes={cellTypes}
                          onHide={() => handleChange()} />}/>
         </>

@@ -14,13 +14,12 @@ interface ECFormProps {
 function EditCellForm(props: ECFormProps) {
 
     const [content, setContent] = useState(props.cell.content)
-    const [type, setType] = useState(props.cellTypes[0].id)
+    const [type, setType] = useState(props.cell.type ? props.cell.type.id : props.cellTypes[0].id)
     const [errorMsg, setErrorMsg] = useState("");
 
     function handleAdd() {
         CellService.saveCell({"id": props.cell.id, "content": content?.trim(), "type": {"id": type}})
             .then(response => {
-                console.log(response)
                 if (response.status === 200) {
                     if (props.onHide) {
                         props.onHide()
