@@ -15,6 +15,7 @@ export function AddCellsPage() {
     const isSignedIn = AuthService.isSignedIn()
 
     const [modalShow, setModalShow] = useState(false);
+    const [confirmModalShow, setConfirmModalShow] = useState(false);
     const [currentCell, setCurrentCell] = useState<ICell>({id: 0});
 
     const [cells, setCells] = useState<ICell[]>([]);
@@ -31,6 +32,10 @@ export function AddCellsPage() {
         })
         setCells(cellsNew)
         setCellsBuffer(cellsNew)
+    }
+
+    async function deleteCell(cellId: number) {
+        await CellService.deleteCell(cellId).then(() => fetchCells());
     }
 
     function adjustListPadding() {
@@ -69,9 +74,20 @@ export function AddCellsPage() {
         setModalShow(false)
     }
 
+    function handleDelete(cellId: number) {
+        deleteCell(cellId)
+        setQuery("")
+        setConfirmModalShow(false)
+    }
+
     const openEditModal = (cell: ICell) => {
         setCurrentCell(cell)
         setModalShow(true)
+    }
+
+    const openDeleteModal = (cell: ICell) => {
+        setCurrentCell(cell)
+        setConfirmModalShow(true)
     }
 
 
@@ -100,7 +116,9 @@ export function AddCellsPage() {
                                         </Form>
                                         <div className="cell-list" ref={listElem}>
                                         <ListGroup>
-                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id} openEdit={openEditModal}/>)}
+                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id}
+                                                                             openEdit={openEditModal}
+                                                                             openDelete={openDeleteModal}/>)}
                                         </ListGroup>
                                         </div>
                                     </Card.Body>
@@ -116,6 +134,11 @@ export function AddCellsPage() {
                          onHide={() => setModalShow(false)}
                          children={<EditCellForm cell={currentCell} cellTypes={cellTypes}
                          onHide={() => handleChange()} />}/>
+
+            <ModalScreen isOpen={confirmModalShow} title={"Delete Cell"}
+                         onHide={() => setConfirmModalShow(false)}
+                         children={<p>Are you sure you want to delete a cell?</p>}
+                         footer={<Button variant={"danger"} onClick={() => handleDelete(currentCell.id)}>Confirm</Button>}/>
         </>
     )
 }

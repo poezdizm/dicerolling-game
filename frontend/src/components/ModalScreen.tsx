@@ -1,8 +1,9 @@
 import React from "react";
-import {Modal} from "react-bootstrap";
+import {Modal, ModalFooter} from "react-bootstrap";
 
 interface ModalProps {
     children?: React.ReactNode,
+    footer?: React.ReactNode,
     title: string,
     isOpen: boolean,
     onHide: () => void
@@ -25,6 +26,7 @@ export function ModalScreen(props: ModalProps) {
             <Modal.Body>
                 {props.children}
             </Modal.Body>
+            {props.footer && <ModalFooter>{props.footer}</ModalFooter>}
         </Modal>
     )
 }

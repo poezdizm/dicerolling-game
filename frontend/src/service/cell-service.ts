@@ -17,9 +17,15 @@ const getCells = () => {
         .then(response => {return response.data})
 }
 
+const deleteCell = (cellId: number) => {
+    return http.delete('/cells/'+cellId, {headers: authHeader()})
+        .then(response => {return response.data})
+}
+
 const CellService = {
     getCells,
-    saveCell
+    saveCell,
+    deleteCell
 };
 
 export default CellService;
