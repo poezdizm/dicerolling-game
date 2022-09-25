@@ -3,9 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Nav, Navbar} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 
-export function Navigation(props: any) {
+export function Navigation() {
 
-    const isAuth = props.user && props.user.token
+    const isAuth = AuthService.isSignedIn()
 
     return (
         <Navbar bg="light" expand="lg">

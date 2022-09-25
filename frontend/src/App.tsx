@@ -10,11 +10,9 @@ import {AddCellsPage} from "./pages/AddCellsPage";
 
 function App() {
 
-    const user = JSON.parse(localStorage.getItem("user") || '{}')
-
     return (
         <>
-            <Navigation user={user}/>
+            <Navigation/>
             <Routes>
                 <Route path="/" element={<RollsPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>

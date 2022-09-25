@@ -15,25 +15,36 @@ function EditCellForm(props: ECFormProps) {
 
     const [content, setContent] = useState(props.cell.content)
     const [type, setType] = useState(props.cellTypes[0].id)
+    const [errorMsg, setErrorMsg] = useState("");
 
     function handleAdd() {
-        CellService.saveCell({"id": props.cell.id, "content": content, "type": {"id": type}})
-            .then(() => {
-                if (props.onHide) {
-                    props.onHide()
+        CellService.saveCell({"id": props.cell.id, "content": content?.trim(), "type": {"id": type}})
+            .then(response => {
+                console.log(response)
+                if (response.status === 200) {
+                    if (props.onHide) {
+                        props.onHide()
+                    }
+                } else {
+                    setErrorMsg(response)
                 }
-            })
+            });
     }
 
     return (
         <Form>
             <Form.Group className="mb-3">
                 <Form.Label>Cell Text</Form.Label>
-                <Form.Control as="textarea" rows={3} value={content} onChange={event => setContent(event.target.value)}>
+                <Form.Control as="textarea" rows={3} value={content}
+                              onChange={event => setContent(event.target.value)}
+                              isInvalid={errorMsg !== ""}>
                     {props.cell.content}
                 </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                    {errorMsg}
+                </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
                 <Form.Label>Cell Type</Form.Label>
                 <Form.Select value={type} onChange={event => setType(parseInt(event.target.value))}>
                     {props.cellTypes.map(cellType => <CellTypeSelectItem cellType={cellType} key={cellType.id} />)}

@@ -8,7 +8,7 @@ const saveCell = (cell: ICell) => {
             return "";
         })
         .catch(function (error) {
-            return error.message
+            return error.response.data.message
         });
 }
 

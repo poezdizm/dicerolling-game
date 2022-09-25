@@ -3,6 +3,7 @@ package ru.poezdizm.dicerollinggame.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.poezdizm.dicerollinggame.exception.ValidationException;
 import ru.poezdizm.dicerollinggame.model.CellModel;
 import ru.poezdizm.dicerollinggame.model.CellTypeModel;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
@@ -34,7 +35,7 @@ public class CellRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CellModel> saveCell(@RequestBody CellModel cellModel) {
+    public ResponseEntity<CellModel> saveCell(@RequestBody CellModel cellModel) throws ValidationException {
         return ResponseEntity.ok().body(cellService.save(cellModel));
     }
 

@@ -8,6 +8,7 @@ const login = (username: string, password: string) => {
                     localStorage.setItem("user", JSON.stringify(response.data))
                 }
             }
+            window.location.reload();
             return response.data
         })
         .catch(function (error) {

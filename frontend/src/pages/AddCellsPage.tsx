@@ -12,7 +12,7 @@ import Utils from "../service/utils";
 
 export function AddCellsPage() {
 
-    const isSignedIn = AuthService.isSignedIn
+    const isSignedIn = AuthService.isSignedIn()
 
     const [modalShow, setModalShow] = useState(false);
     const [currentCell, setCurrentCell] = useState<ICell>({id: 0});
@@ -86,7 +86,9 @@ export function AddCellsPage() {
                                     <Card.Body>
                                         <Form>
                                             <Form.Group className="mb-3">
-                                                <Form.Control type="text" placeholder="Type something to search" value={query} onChange={event => setQuery(event.target.value)} />
+                                                <Form.Control type="text" placeholder="Type something to search"
+                                                              value={query}
+                                                              onChange={event => setQuery(event.target.value)} />
                                             </Form.Group>
                                         </Form>
                                         <div className="cell-list" ref={listElem}>
@@ -104,7 +106,8 @@ export function AddCellsPage() {
             </div>
 
             <ModalScreen isOpen={modalShow} title={"Add new Cell"} onHide={() => setModalShow(false)}
-                         children={<EditCellForm cell={currentCell} cellTypes={cellTypes} onHide={() => handleChange()} />}/>
+                         children={<EditCellForm cell={currentCell} cellTypes={cellTypes}
+                         onHide={() => handleChange()} />}/>
         </>
     )
 }

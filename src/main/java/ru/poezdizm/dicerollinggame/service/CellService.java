@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.CellEntity;
 import ru.poezdizm.dicerollinggame.entity.CellTypeEntity;
+import ru.poezdizm.dicerollinggame.exception.ValidationException;
 import ru.poezdizm.dicerollinggame.model.CellModel;
 import ru.poezdizm.dicerollinggame.model.CellTypeModel;
 import ru.poezdizm.dicerollinggame.repository.CellRepository;
@@ -42,7 +43,8 @@ public class CellService {
         return cellTypeRepository.findById(model.getId()).orElse(cellTypeRepository.getByLabel(DEFAULT_LABEL));
     }
 
-    public CellModel save(CellModel model) {
+    public CellModel save(CellModel model) throws ValidationException {
+        validate(model);
         CellEntity entity = findCellEntity(model.getId());
         CellTypeEntity typeEntity = findCellTypeEntity(model.getType());
 
@@ -50,6 +52,18 @@ public class CellService {
         entity.setType(typeEntity);
 
         return mapCell(cellRepository.save(entity));
+    }
+
+    private void validate(CellModel model) throws ValidationException {
+        if (model.getType() == null || model.getType().getId() == null || model.getType().getId() == 0) {
+            throw new ValidationException("Cell is invalid");
+        }
+        if (model.getContent() == null || model.getContent().isBlank()) {
+            throw new ValidationException("Cell content should not be empty");
+        }
+        if (cellRepository.findByContent(model.getContent()).isPresent()) {
+            throw new ValidationException("Cell with same content already exists");
+        }
     }
 
     public void deleteById(Long id) {
