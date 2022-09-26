@@ -1,6 +1,6 @@
 import {ICellType} from "./ICellType";
 
 export interface ITypeValue {
-    value: number,
+    value?: number,
     type: ICellType
 }

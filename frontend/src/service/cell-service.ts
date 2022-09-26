@@ -22,6 +22,11 @@ const deleteCell = (cellId: number) => {
         .then(response => {return response.data})
 }
 
+const getCellTypes = () => {
+    return http.get('/cells/types', {headers: authHeader()})
+        .then(response => {return response.data})
+}
+
 const getTypesCount = () => {
     return http.get('/cells/types/count', {headers: authHeader()})
         .then(response => {return response.data})
@@ -31,6 +36,7 @@ const CellService = {
     getCells,
     saveCell,
     deleteCell,
+    getCellTypes,
     getTypesCount
 };
 

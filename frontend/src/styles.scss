@@ -52,6 +52,12 @@
   margin-top: 15px !important;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .ng-group {
   color: black;
 
@@ -63,8 +69,18 @@
     .ng-control {
       float: right;
 
+      button {
+        border: 1px solid #ced4da !important;
+      }
+
+      .ng-control-number {
+        text-align: center;
+        z-index: 10 !important;
+        -moz-appearance:textfield;
+      }
+
       &.ng-control-sm {
-        width: 30%;
+        width: 45%;
         float: right;
       }
 

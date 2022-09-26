@@ -5,7 +5,7 @@ import AuthService from "../service/auth-service";
 import {Navigate} from "react-router-dom";
 import CellListItem from "../components/CellListItem";
 import {useCellTypes} from "../service/hooks/use-cell-types";
-import EditCellForm from "../components/EditCellForm";
+import EditCellForm from "../components/forms/EditCellForm";
 import {ICell} from "../models/ICell";
 import CellService from "../service/cell-service";
 import Utils from "../service/utils";
