@@ -10,6 +10,7 @@ import NumberFormControl from "../components/forms/NumberFormControl";
 import StringFormControl from "../components/forms/StringFormControl";
 import {ISettings} from "../models/ISettings";
 import SettingsService from "../service/settings-service";
+import SwitchFormControl from "../components/forms/SwitchFormControl";
 
 function NewGamePage() {
 
@@ -37,7 +38,7 @@ function NewGamePage() {
     const [vtLocalInvalid, setVtLocalInvalid] = useState(true)
 
     async function fetchTypes() {
-        let cellsMax = await CellService.getTypesCount().then(result => {
+        let cellsMax = await CellService.getCellCount().then(result => {
             return result
         })
         let cellTypeArray = await CellService.getCellTypes().then(result => {
@@ -147,11 +148,13 @@ function NewGamePage() {
                                             <h2 className={"ng-heading"}>Create new game</h2>
                                             <hr/>
                                             <StringFormControl label={"Name"} value={title} isLarge={true}
-                                                               valid={titleValid} setValue={handleTitleChange} />
+                                                               valid={titleValid} setValue={handleTitleChange}/>
                                             <NumberFormControl label={"Number of cells"} value={cellNumber}
                                                                min={1} max={cellMax} isSmall={false}
                                                                valid={true} setValue={setCellNumber}
-                                                               disableButton={setVtLocalInvalid} />
+                                                               disableButton={setVtLocalInvalid}
+                                                               tooltip={"Total number of cells on " +
+                                                                   "the board (excluding start and finish)"} />
                                             {typeValues.map(typeValue =>
                                                 <CellTypeFormControl cellType={typeValue.type} value={typeValue.value}
                                                                      max={cellNumber} setValue={handleChangeTypeValue}
@@ -160,32 +163,26 @@ function NewGamePage() {
                                             <NumberFormControl label={"Gray zone"} value={grayZoneNumber}
                                                                min={0} max={cellNumber} isSmall={true}
                                                                valid={true} setValue={setGrayZoneNumber}
-                                                               disableButton={setVtLocalInvalid}/>
-                                            <Form.Group className="mb-3 mt-3 ng-group">
-                                                <Form.Label className={"ng-label ng-label-md"}>Shared grid</Form.Label>
-                                                <div className={"ng-control-container"}>
-                                                    <Form.Switch id="shared-check" aria-label="shared"
-                                                                 checked={isShared}
-                                                                 className={"ng-control ng-control-switch"}
-                                                                 onChange={() => handleSharedToggle()}/>
-                                                </div>
-                                            </Form.Group>
+                                                               disableButton={setVtLocalInvalid}
+                                                               tooltip={"While in gray zone, player has to step one " +
+                                                                   "cell back each time he fails a challenge"} />
+                                            <SwitchFormControl label={"Shared board"}
+                                                               value={isShared} isSmall={false}
+                                                               onToggle={handleSharedToggle}
+                                                               tooltip={"Shared board means same cells in same " +
+                                                                   "positions for each player"} />
                                             <Collapse in={!isShared}>
                                                 <div>
-                                                    <Form.Group className="mb-3 ng-group">
-                                                        <Form.Label className={"ng-label ng-label-sm"}>Has shared
-                                                            cell</Form.Label>
-                                                        <div className={"ng-control-container"}>
-                                                            <Form.Switch id="shared-check" aria-label="shared"
-                                                                         checked={hasSharedCell}
-                                                                         className={"ng-control ng-control-switch-sm"}
-                                                                         onChange={() => setHasSharedCell(!hasSharedCell)}/>
-                                                        </div>
-                                                    </Form.Group>
+                                                    <SwitchFormControl label={"Has shared cell"}
+                                                                       value={hasSharedCell} isSmall={true}
+                                                                       onToggle={() => setHasSharedCell(!hasSharedCell)}
+                                                                       tooltip={"If checked, board will contain " +
+                                                                           "exactly one cell, that is shared " +
+                                                                           "between each board"} />
                                                 </div>
                                             </Collapse>
                                             <NumberFormControl label={"Number of players"} value={playersNumber}
-                                                               min={1} isSmall={false}
+                                                               min={1} isSmall={true}
                                                                valid={true} setValue={setPlayersNumber}
                                                                disableButton={setVtLocalInvalid}/>
                                         </Row>

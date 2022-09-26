@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, InputGroup} from "react-bootstrap";
 import {ChevronDown, ChevronUp} from "react-bootstrap-icons";
+import BasicTooltip from "../BasicTooltip";
 
 interface NumberFormControlProps {
     label: string,
@@ -10,7 +11,8 @@ interface NumberFormControlProps {
     isSmall: boolean,
     valid: boolean,
     setValue: (value: number) => void,
-    disableButton: (disable: boolean) => void
+    disableButton: (disable: boolean) => void,
+    tooltip?: string
 }
 
 function NumberFormControl(props: NumberFormControlProps) {
@@ -62,7 +64,10 @@ function NumberFormControl(props: NumberFormControlProps) {
 
     return (
         <Form.Group className="mb-3 mt-3 ng-group">
-            <Form.Label className={"ng-label " + (props.isSmall ? "ng-label-sm" : "ng-label-md")}>{props.label}</Form.Label>
+            <Form.Label className={"ng-label " + (props.isSmall ? "ng-label-sm" : "ng-label-md")}>
+                {props.label}
+                {props.tooltip && <BasicTooltip text={props.tooltip} />}
+            </Form.Label>
             <div className={"ng-control-container"}>
                 <InputGroup className={"ng-control ng-control-sm"}>
                     <Button variant="outline-secondary" onClick={() => plusOne()}>

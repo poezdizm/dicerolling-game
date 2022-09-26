@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.*;
 import ru.poezdizm.dicerollinggame.exception.ValidationException;
-import ru.poezdizm.dicerollinggame.model.CellModel;
-import ru.poezdizm.dicerollinggame.model.CellTypeModel;
 import ru.poezdizm.dicerollinggame.model.GameSettingsModel;
 import ru.poezdizm.dicerollinggame.model.SettingsToTypeModel;
 import ru.poezdizm.dicerollinggame.repository.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,7 +51,7 @@ public class GameSettingsService {
             throw new ValidationException("Title cannot be empty");
         }
         Integer maxCellNumber = model.getMaxCellNumber();
-        long poolMax = cellService.countCellTypes();
+        long poolMax = cellService.countCells();
         if (maxCellNumber > poolMax) {
             throw new ValidationException("Max cell number (" + maxCellNumber + ") cannot be greater than " +
                     "number of cells in pool (" + poolMax + ")");

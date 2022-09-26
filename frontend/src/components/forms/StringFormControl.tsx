@@ -1,19 +1,24 @@
 import React from "react";
 import {Form} from "react-bootstrap";
+import BasicTooltip from "../BasicTooltip";
 
 interface StringFormControlProps {
     label: string,
     value: string,
     isLarge: boolean,
     valid: boolean,
-    setValue: (value: string) => void
+    setValue: (value: string) => void,
+    tooltip?: string
 }
 
 function StringFormControl(props: StringFormControlProps) {
 
     return (
         <Form.Group className="mb-3 mt-3 ng-group">
-            <Form.Label className={"ng-label"}>{props.label}</Form.Label>
+            <Form.Label className={"ng-label"}>
+                {props.label}
+                {props.tooltip && <BasicTooltip text={props.tooltip} />}
+            </Form.Label>
             <div className={"ng-control-container"}>
                 <Form.Control size="lg" type="text" value={props.value}
                               className={"ng-control " +  + (props.isLarge ? "ng-control-lg" : "")}

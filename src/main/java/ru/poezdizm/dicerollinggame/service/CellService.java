@@ -31,8 +31,8 @@ public class CellService {
         return cellTypeRepository.findAll().stream().map(CellService::mapType).toList();
     }
 
-    public long countCellTypes() {
-        return cellTypeRepository.count();
+    public long countCells() {
+        return cellRepository.count();
     }
 
     public CellModel getCellById(Long id) {
