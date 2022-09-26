@@ -17,6 +17,7 @@ export function Navigation() {
                         <Nav.Link href="/">Rolls</Nav.Link>
                         {isAuth ?
                             <>
+                                <Nav.Link href="/new">New Game</Nav.Link>
                                 <Nav.Link href="/add">Add Cells</Nav.Link>
                                 <Nav.Link href="#" onClick={() => AuthService.logout()}>Logout</Nav.Link>
                             </>

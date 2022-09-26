@@ -1,5 +1,5 @@
 .basic-container {
-  padding-bottom: 150px;
+  padding-bottom: 80px;
 
   input::placeholder {
     color: #c0c0c0;
@@ -11,7 +11,7 @@
 }
 
 .cell-list {
-  height: 470px !important;
+  height: 600px !important;
   padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -34,6 +34,67 @@
     background-color: #b0b0b0 !important;
     &:hover {
       background-color: #7e7e7e !important;
+    }
+  }
+}
+
+.ng-row {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  max-width: 100%;
+  &.ng-button-row {
+    justify-content: center;
+  }
+}
+
+.ng-heading {
+  color: black;
+  margin-top: 15px !important;
+}
+
+.ng-group {
+  color: black;
+
+  .ng-control-container {
+    width: 60%;
+    float: right;
+    margin-right:20px;
+
+    .ng-control {
+      float: right;
+
+      &.ng-control-sm {
+        width: 30%;
+        float: right;
+      }
+
+      &.ng-control-switch > input {
+        margin-top: 0;
+      }
+
+      &.ng-control-switch-sm > input {
+        max-height: 20px;
+        margin-top: 0;
+      }
+    }
+  }
+
+  .ng-label {
+    text-align: left;
+    width: 30%;
+    float: left;
+    margin-left:20px;
+
+    &.ng-label-lg {
+      font-size: 30px;
+    }
+
+    &.ng-label-md {
+      font-size: 22px;
+    }
+
+    &.ng-label-sm {
+      font-size: 16px;
     }
   }
 }

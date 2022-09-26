@@ -24,6 +24,11 @@ public class CellRestController {
         return cellService.getAllCells();
     }
 
+    @GetMapping("/types/count")
+    public ResponseEntity<Long> getCellTypesCount() {
+        return ResponseEntity.ok().body(cellService.countCellTypes());
+    }
+
     @GetMapping("/types")
     public List<CellTypeModel> getCellTypes() {
         return cellService.getAllCellTypes();

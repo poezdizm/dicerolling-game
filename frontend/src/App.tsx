@@ -7,6 +7,7 @@ import {Navigation} from "./components/Navigation";
 import {LoginPage} from "./pages/LoginPage";
 import {RegisterPage} from "./pages/RegisterPage";
 import {AddCellsPage} from "./pages/AddCellsPage";
+import NewGamePage from "./pages/NewGamePage";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/reg" element={<RegisterPage/>}/>
                 <Route path="/add" element={<AddCellsPage/>}/>
+                <Route path="/new" element={<NewGamePage/>}/>
             </Routes>
         </>
     );

@@ -9,7 +9,7 @@ import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameSettingsService;
 
 @RestController
-@RequestMapping("/new")
+@RequestMapping("/settings")
 @CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 public class GameSettingsRestController {
