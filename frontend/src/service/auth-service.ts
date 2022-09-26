@@ -36,12 +36,18 @@ const isSignedIn = () => {
     return user && user.token;
 }
 
+const getUser = () => {
+    let user = JSON.parse(localStorage.getItem("user") || '{}');
+    return {"username": user.username, "password": ""}
+}
+
 
 const AuthService = {
     login,
     logout,
     register,
-    isSignedIn
+    isSignedIn,
+    getUser
 };
 
 export default AuthService;

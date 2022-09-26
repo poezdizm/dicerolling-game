@@ -8,6 +8,8 @@ import {ITypeValue} from "../models/ITypeValue";
 import {ICellType} from "../models/ICellType";
 import NumberFormControl from "../components/forms/NumberFormControl";
 import StringFormControl from "../components/forms/StringFormControl";
+import {ISettings} from "../models/ISettings";
+import SettingsService from "../service/settings-service";
 
 function NewGamePage() {
 
@@ -108,9 +110,12 @@ function NewGamePage() {
         }
     }
 
-    /*
     function handleAdd() {
-        SettingsService.saveSettings({"title": title, })
+        let settings: ISettings = {"title": title, "maxCellNumber": cellNumber, "playersNumber": playersNumber,
+            "grayZoneNumber": grayZoneNumber, "isShared": isShared, "hasSharedCell": hasSharedCell,
+            "owner": AuthService.getUser(), "typeValues": typeValues}
+
+        SettingsService.saveSettings(settings)
             .then(response => {
                 if (response.status === 200) {
                     setCreated(true)
@@ -118,14 +123,14 @@ function NewGamePage() {
                     setErrorMsg(response)
                 }
             });
-    }*/
+    }
 
     if (!isSignedIn) {
         return <Navigate to="/login"/>
     }
 
     if (created) {
-        return <Navigate to="/rolls"/>
+        return <Navigate to="/"/>
     }
 
     return (
@@ -141,7 +146,6 @@ function NewGamePage() {
                                         <Row className={"ng-row"}>
                                             <h2 className={"ng-heading"}>Create new game</h2>
                                             <hr/>
-                                            {errorMsg.length !== 0 && <p>{errorMsg}</p>}
                                             <StringFormControl label={"Name"} value={title} isLarge={true}
                                                                valid={titleValid} setValue={handleTitleChange} />
                                             <NumberFormControl label={"Number of cells"} value={cellNumber}
@@ -186,8 +190,12 @@ function NewGamePage() {
                                                                disableButton={setVtLocalInvalid}/>
                                         </Row>
                                         <Row sm={3} className={"mt-3 mb-3 ng-row ng-button-row"}>
-                                            <Button disabled={!titleValid || !vtValid || vtLocalInvalid}>Create</Button>
+                                            <Button disabled={!titleValid || !vtValid || vtLocalInvalid}
+                                                    onClick={() => handleAdd()}>
+                                                Create
+                                            </Button>
                                         </Row>
+                                        {errorMsg.length !== 0 && <p className={"ng-error"}>{errorMsg}</p>}
                                     </Form>
                                 </Card>
                             </Col>
