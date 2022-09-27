@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Badge, Col, Container, ListGroup, Row, Toast} from "react-bootstrap";
+import {Badge, Col, Container, ListGroup, Row} from "react-bootstrap";
 import {Link45deg, Trash3} from "react-bootstrap-icons";
 import {IGameSimplified} from "../models/game/IGameSimplified";
-import {Link, Navigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 interface GameListItemProps {
     game: IGameSimplified,

@@ -16,4 +16,5 @@ public class GameModel {
     private List<GameCellModel> cells;
     private List<PlayerModel> players;
     private Boolean isStarted;
+    private Integer playersMax;
 }

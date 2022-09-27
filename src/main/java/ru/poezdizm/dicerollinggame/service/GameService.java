@@ -150,6 +150,7 @@ public class GameService {
     private static GameModel mapGame(GameEntity game, UserEntity currentPlayer) throws IllegalArgumentException {
         GameModel gameModel = GameModel.builder().id(game.getId()).title(game.getGameSettings().getTitle())
                 .players(game.getGamePlayers().stream().map(GameService::mapPlayer).toList())
+                .playersMax(game.getGameSettings().getPlayersNumber())
                 .isStarted(game.getIsStarted()).build();
 
         GameBoardEntity board = game.getGameBoards().stream()

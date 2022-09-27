@@ -16,9 +16,103 @@
   margin: 0 !important;
   padding: 0 !important;
 
+  .board-row {
+    margin-top: 10px;
+    align-items: center;
+    min-height: 70px;
+
+    &.board-grid {
+      min-height: 65%;
+    }
+  }
+
+  .players-row {
+    justify-content: center;
+    margin-top: 10px;
+
+    &.players-info {
+      display: flex;
+      justify-content: space-between;
+
+      .player-username {
+        font-size: 25px;
+        align-self: flex-end;
+        text-align: left;
+        width: 60%;
+        max-height: 30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .player-position {
+        align-self: end;
+        align-items: center;
+        display: grid;
+        width: 30%;
+
+        .player-progress-label {
+          font-size: 12px;
+          margin: 0;
+        }
+      }
+
+      .player-roll {
+        width: 10%;
+      }
+    }
+  }
+
   .board-col {
     height: 100% !important;
     min-height: 100% !important;
+
+    &.col-players {
+      background-color: #6a413d;
+    }
+
+    &.col-board {
+      background-color: #2f4c6a;
+    }
+  }
+
+  .board-container {
+    display: grid;
+    grid-auto-flow: row;
+    grid-auto-rows: minmax(120px, auto);
+    grid-row-gap: 0.3em;
+
+
+
+    .game-cell-div {
+      min-height: 60px;
+
+      .cell-gap {
+        height: 15%;
+      }
+
+      .game-cell {
+        height: 85%;
+        border: 1px solid black;
+
+        .cell-position {
+          color: #4d4d4d;
+          float: left;
+          margin-top: 1%;
+          margin-left: 3%;
+          font-size: 20px;
+        }
+
+        &.finish-cell {
+          background-image: url('../public/finish.png');
+          background-repeat: repeat;
+        }
+
+        &.start-cell {
+          background-color: #ffb0f3;
+        }
+      }
+    }
   }
 }
 
@@ -196,14 +290,6 @@ input[type="number"]::-webkit-outer-spin-button {
 .ng-error {
   color: red;
   font-size: 16px;
-}
-
-.col-players {
-  background-color: #6a413d;
-}
-
-.col-board {
-  background-color: #2f4c6a;
 }
 
 ::-webkit-scrollbar {
