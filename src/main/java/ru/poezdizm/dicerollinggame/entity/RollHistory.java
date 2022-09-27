@@ -16,8 +16,11 @@ public class RollHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String username;
     @Column(name = "roll_value")
     private int rollValue;
+
+    @OneToOne
+    @JoinColumn(name = "game_to_player_id")
+    private GameToPlayerEntity playerAndGame;
 }

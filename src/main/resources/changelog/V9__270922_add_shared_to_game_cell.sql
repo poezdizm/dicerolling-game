@@ -1,0 +1,1 @@
+alter table game_cell add column shared boolean not null default false;

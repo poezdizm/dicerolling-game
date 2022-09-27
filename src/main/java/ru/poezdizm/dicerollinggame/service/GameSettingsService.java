@@ -10,8 +10,7 @@ import ru.poezdizm.dicerollinggame.repository.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +20,8 @@ public class GameSettingsService {
     private final UserRepository userRepository;
     private final CellService cellService;
     private final SettingsToTypeRepository settingsToTypeRepository;
+
+    private final GameService gameService;
 
     public String save(GameSettingsModel model) throws ValidationException {
         UserEntity owner = validateAndGetUser(model);
@@ -36,12 +37,17 @@ public class GameSettingsService {
         entity.setHasSharedCell(model.getHasSharedCell());
         entity.setPlayersNumber(model.getPlayersNumber());
         entity.setOwner(owner);
+        entity.setSeed(stringToSeed(model.getSeed()));
+
+        List<SettingsToTypeEntity> settingsToTypeList = new ArrayList<>();
+        for (SettingsToTypeModel sttModel : model.getTypeValues()) {
+            settingsToTypeList.add(getSettingsToType(sttModel, entity));
+        }
+        entity.setTypeValues(settingsToTypeList);
 
         GameSettingsEntity newEntity = settingsRepository.save(entity);
 
-        for (SettingsToTypeModel sttModel : model.getTypeValues()) {
-            saveSettingsToType(sttModel, newEntity);
-        }
+        gameService.saveGame(newEntity);
 
         return "Game settings saved successfully";
     }
@@ -66,14 +72,14 @@ public class GameSettingsService {
                 .orElseThrow(() -> new ValidationException("User was not found"));
     }
 
-    private void saveSettingsToType(SettingsToTypeModel model, GameSettingsEntity settings) {
+    private SettingsToTypeEntity getSettingsToType(SettingsToTypeModel model, GameSettingsEntity settings) {
         SettingsToTypeEntity entity = new SettingsToTypeEntity();
 
         entity.setValue(model.getValue());
         entity.setSettings(settings);
         entity.setType(cellService.findCellTypeEntity(model.getType()));
 
-        settingsToTypeRepository.save(entity);
+        return entity;
     }
 
     public void deleteById(Long id) {
@@ -84,6 +90,17 @@ public class GameSettingsService {
             }
             settingsRepository.deleteById(id);
         }
+    }
+
+    private static Long stringToSeed(String s) {
+        if (s == null || s.isBlank()) {
+            return System.nanoTime();
+        }
+        long hash = 0L;
+        for (char c : s.toCharArray()) {
+            hash = 31L*hash + c;
+        }
+        return hash;
     }
 
 }

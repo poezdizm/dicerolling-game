@@ -1,0 +1,1 @@
+alter table game_settings add column seed bigint;

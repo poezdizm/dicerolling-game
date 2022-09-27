@@ -21,6 +21,7 @@ public class GameSettingsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private Long seed;
     @Column(name = "max_cell_number")
     private Integer maxCellNumber;
     @Column(name = "shared")
@@ -39,6 +40,6 @@ public class GameSettingsEntity {
     @Column(name = "created_at")
     private Timestamp timeOfCreation;
 
-    @OneToMany(mappedBy = "settings")
+    @OneToMany(mappedBy = "settings", cascade = CascadeType.PERSIST)
     private List<SettingsToTypeEntity> typeValues;
 }

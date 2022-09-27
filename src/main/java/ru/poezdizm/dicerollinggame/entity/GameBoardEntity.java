@@ -6,27 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name="settings_to_type")
+@Table(name="board")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SettingsToTypeEntity {
+public class GameBoardEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer value;
 
     @ManyToOne
-    @JoinColumn(name = "settings_id", nullable = false)
-    private GameSettingsEntity settings;
+    @JoinColumn(name = "game_id")
+    private GameEntity game;
 
     @OneToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private CellTypeEntity type;
+    @JoinColumn(name = "player_id")
+    private UserEntity player;
 
-
+    @OneToMany(mappedBy = "board", cascade=CascadeType.PERSIST)
+    private List<GameCellEntity> gameCells;
 }

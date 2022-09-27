@@ -19,4 +19,5 @@ public class GameSettingsModel {
     private Integer playersNumber;
     private UserModel owner;
     private List<SettingsToTypeModel> typeValues;
+    private String seed;
 }

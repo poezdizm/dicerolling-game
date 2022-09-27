@@ -12,7 +12,9 @@ import ru.poezdizm.dicerollinggame.repository.CellTypeRepository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +91,25 @@ public class CellService {
         return CellTypeModel.builder()
                 .id(entity.getId()).label(entity.getLabel()).color(entity.getColor())
                 .build();
+    }
+
+    public ArrayList<CellEntity> getRandomCellList(Random random, Integer numberOfElements) {
+        List<CellEntity> allCells = cellRepository.findAll();
+        Long count = countCells();
+        if (numberOfElements > count) {
+            numberOfElements = count.intValue();
+        }
+
+        ArrayList<CellEntity> randomCells = new ArrayList<>();
+        for (int i = 0; i < numberOfElements; i++) {
+            int randomIndex = random.nextInt(count.intValue());
+            CellEntity randomCell = allCells.get(randomIndex);
+            randomCells.add(randomCell);
+            allCells.remove(randomCell);
+            count--;
+        }
+
+        return randomCells;
     }
 
 }

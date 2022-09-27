@@ -8,25 +8,28 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="settings_to_type")
+@Table(name="game_cell")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class SettingsToTypeEntity {
+public class GameCellEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer value;
+    @Column(name = "position_num")
+    private Integer position;
+    @Column(name = "gray")
+    private Boolean isGray;
+    @Column(name = "shared")
+    private Boolean isShared;
 
     @ManyToOne
-    @JoinColumn(name = "settings_id", nullable = false)
-    private GameSettingsEntity settings;
+    @JoinColumn(name = "board_id")
+    private GameBoardEntity board;
 
     @OneToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private CellTypeEntity type;
-
-
+    @JoinColumn(name = "cell_id")
+    private CellEntity cell;
 }

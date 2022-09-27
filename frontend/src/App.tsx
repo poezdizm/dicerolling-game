@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import './styles.scss';
 import {Route, Routes} from "react-router-dom";
-import {RollsPage} from "./pages/RollsPage";
+import {MainPage} from "./pages/MainPage";
 import {Navigation} from "./components/Navigation";
 import {LoginPage} from "./pages/LoginPage";
 import {RegisterPage} from "./pages/RegisterPage";
@@ -15,7 +15,7 @@ function App() {
         <>
             <Navigation/>
             <Routes>
-                <Route path="/" element={<RollsPage/>}/>
+                <Route path="/" element={<MainPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/reg" element={<RegisterPage/>}/>
                 <Route path="/add" element={<AddCellsPage/>}/>

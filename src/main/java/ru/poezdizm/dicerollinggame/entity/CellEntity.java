@@ -25,4 +25,19 @@ public class CellEntity {
 
     @ManyToOne
     private CellTypeEntity type;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CellEntity that = (CellEntity) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
