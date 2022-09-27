@@ -14,7 +14,7 @@ export function Navigation() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/">Rolls</Nav.Link>
+                        <Nav.Link href="/">Games</Nav.Link>
                         {isAuth ?
                             <>
                                 <Nav.Link href="/new">New Game</Nav.Link>

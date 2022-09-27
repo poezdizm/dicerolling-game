@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Badge, Col, Container, ListGroup, Row, Toast} from "react-bootstrap";
 import {Link45deg, Trash3} from "react-bootstrap-icons";
 import {IGameSimplified} from "../models/IGameSimplified";
-import {Link} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 
 interface GameListItemProps {
     game: IGameSimplified,
@@ -13,6 +13,7 @@ interface GameListItemProps {
 function GameListItem(props: GameListItemProps) {
 
     const [baseUrl, setBaseUrl] = useState("")
+    const [redirect, setRedirect] = useState(false)
 
     useEffect(() => {
         setBaseUrl(window.location.protocol + "//" + window.location.host)
@@ -23,12 +24,16 @@ function GameListItem(props: GameListItemProps) {
         props.showToast()
     }
 
+    if (redirect) {
+        return <Navigate to={"/game?id=" + props.game.id} />
+    }
+
     return (
-        <ListGroup.Item className={"cell-list-item"}>
+        <ListGroup.Item className={"list-item main-list-item"}>
             <Container fluid>
                 <Row>
-                    <Col className={"content"}>
-                        <Link to={"/game?id=" + props.game.id}>{props.game.title}</Link>
+                    <Col className={"content"} onClick={() => setRedirect(true)}>
+                        <p>{props.game.title}</p>
                     </Col>
                     <Col sm={1} className={"badge-col"}>
                         <Badge onClick={() => copyLink()}>

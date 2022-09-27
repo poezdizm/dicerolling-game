@@ -29,6 +29,10 @@
   display: none;
 }
 
+.main-card {
+  height: 700px !important;
+}
+
 .cell-list {
   height: 600px !important;
   padding-right: 10px;
@@ -36,10 +40,30 @@
   overflow-x: hidden;
 }
 
-.cell-list-item {
+.list-item {
   max-height: 45px;
-  font-weight: 14;
   font-size: 20px;
+
+  &.cell-list-item {
+    font-weight: 100;
+  }
+
+  &.main-list-item {
+    max-height: 50px !important;
+    text-align: left;
+    cursor: pointer;
+
+    p {
+      font-weight: 400;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      background-color: #ececec;
+    }
+  }
 
   .content {
     overflow: hidden;
@@ -66,9 +90,28 @@
   }
 }
 
+.main-heading-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .main-heading {
+    color: #808080;
+    margin-top: 5px !important;
+    vertical-align: center;
+    margin-bottom: 200px !important;
+  }
+}
+
+.main-link {
+  color: #6f74ff;
+}
+
 .ng-heading {
   color: black;
-  margin-top: 15px !important;
+  margin-top: 5px !important;
+  height: 100%;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

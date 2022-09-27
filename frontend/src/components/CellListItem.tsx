@@ -28,7 +28,7 @@ function CellListItem(props: CellProps) {
     }
 
     return (
-        <ListGroup.Item style={itemStyle} className={"cell-list-item"}
+        <ListGroup.Item style={itemStyle} className={"list-item cell-list-item"}
                         onMouseEnter={() => hover()} onMouseLeave={() => unHover()}>
             <Container fluid>
                 <Row>

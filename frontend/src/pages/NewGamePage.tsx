@@ -143,9 +143,10 @@ function NewGamePage() {
                             <Col sm={1}/>
                             <Col sm={7}>
                                 <Card className="mt-4">
+                                    <Card.Header><h2 className={"ng-heading"}>Create new game</h2></Card.Header>
+                                    <Card.Body>
                                     <Form>
                                         <Row className={"ng-row"}>
-                                            <h2 className={"ng-heading"}>Create new game</h2>
                                             <hr/>
                                             <StringFormControl label={"Name"} value={title} isLarge={true}
                                                                valid={titleValid} setValue={handleTitleChange}/>
@@ -194,6 +195,7 @@ function NewGamePage() {
                                         </Row>
                                         {errorMsg.length !== 0 && <p className={"ng-error"}>{errorMsg}</p>}
                                     </Form>
+                                    </Card.Body>
                                 </Card>
                             </Col>
                             <Col sm={3}></Col>
