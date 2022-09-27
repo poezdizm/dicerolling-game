@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.entity;
+package ru.poezdizm.dicerollinggame.entity.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +19,8 @@ public class GameEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "started")
+    private Boolean isStarted;
 
     @OneToOne
     @JoinColumn(name = "settings_id")

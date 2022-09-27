@@ -8,6 +8,7 @@ import {LoginPage} from "./pages/LoginPage";
 import {RegisterPage} from "./pages/RegisterPage";
 import {AddCellsPage} from "./pages/AddCellsPage";
 import NewGamePage from "./pages/NewGamePage";
+import BoardPage from "./pages/BoardPage";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/reg" element={<RegisterPage/>}/>
                 <Route path="/add" element={<AddCellsPage/>}/>
                 <Route path="/new" element={<NewGamePage/>}/>
+                <Route path="/game" element={<BoardPage/>}/>
             </Routes>
         </>
     );

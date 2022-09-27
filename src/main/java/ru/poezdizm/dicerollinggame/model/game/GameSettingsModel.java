@@ -1,6 +1,7 @@
-package ru.poezdizm.dicerollinggame.model;
+package ru.poezdizm.dicerollinggame.model.game;
 
 import lombok.*;
+import ru.poezdizm.dicerollinggame.model.UserModel;
 
 import java.util.List;
 

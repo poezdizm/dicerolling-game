@@ -3,7 +3,8 @@ package ru.poezdizm.dicerollinggame.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.poezdizm.dicerollinggame.model.GameSimplifiedModel;
+import ru.poezdizm.dicerollinggame.model.game.GameModel;
+import ru.poezdizm.dicerollinggame.model.game.GameSimplifiedModel;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameService;
 
@@ -21,6 +22,11 @@ public class GameRestController {
     @GetMapping("/all")
     public List<GameSimplifiedModel> getGames(Principal principal) {
         return gameService.getGamesByCurrentUser(principal.getName());
+    }
+
+    @GetMapping
+    public ResponseEntity<GameModel> getGame(@RequestParam("id") Long gameId, Principal principal) {
+        return ResponseEntity.ok().body(gameService.getGame(gameId, principal.getName()));
     }
 
     @DeleteMapping

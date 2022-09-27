@@ -6,6 +6,22 @@
   }
 }
 
+.board {
+  min-width: 100% !important;
+  min-height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  .board-col {
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+}
+
 .basic-tooltip {
   margin-left: 10px;
 }
@@ -180,6 +196,14 @@ input[type="number"]::-webkit-outer-spin-button {
 .ng-error {
   color: red;
   font-size: 16px;
+}
+
+.col-players {
+  background-color: #6a413d;
+}
+
+.col-board {
+  background-color: #2f4c6a;
 }
 
 ::-webkit-scrollbar {

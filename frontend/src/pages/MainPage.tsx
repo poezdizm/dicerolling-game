@@ -4,7 +4,7 @@ import AuthService from "../service/auth-service";
 import {Col, Container, Row, Card, Toast, ListGroup} from "react-bootstrap";
 import {useGames} from "../service/hooks/use-games";
 import GameListItem from "../components/GameListItem";
-import {IGameSimplified} from "../models/IGameSimplified";
+import {IGameSimplified} from "../models/game/IGameSimplified";
 import GameService from "../service/game-service";
 import {Link} from "react-router-dom";
 

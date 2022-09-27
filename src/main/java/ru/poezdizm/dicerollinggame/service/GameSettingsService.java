@@ -3,9 +3,11 @@ package ru.poezdizm.dicerollinggame.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.*;
+import ru.poezdizm.dicerollinggame.entity.game.GameSettingsEntity;
+import ru.poezdizm.dicerollinggame.entity.game.SettingsToTypeEntity;
 import ru.poezdizm.dicerollinggame.exception.ValidationException;
-import ru.poezdizm.dicerollinggame.model.GameSettingsModel;
-import ru.poezdizm.dicerollinggame.model.SettingsToTypeModel;
+import ru.poezdizm.dicerollinggame.model.game.GameSettingsModel;
+import ru.poezdizm.dicerollinggame.model.game.SettingsToTypeModel;
 import ru.poezdizm.dicerollinggame.repository.*;
 
 import java.sql.Timestamp;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.dicerollinggame.exception.ValidationException;
-import ru.poezdizm.dicerollinggame.model.GameSettingsModel;
+import ru.poezdizm.dicerollinggame.model.game.GameSettingsModel;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameSettingsService;
 

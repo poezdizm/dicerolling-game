@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.model;
+package ru.poezdizm.dicerollinggame.model.game;
 
 import lombok.*;
 

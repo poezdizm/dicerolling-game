@@ -1,0 +1,1 @@
+alter table game add column started boolean not null default false;

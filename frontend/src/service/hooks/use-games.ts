@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import http from "../../http-common";
 import {authHeader} from "./auth-header";
-import {IGameSimplified} from "../../models/IGameSimplified";
+import {IGameSimplified} from "../../models/game/IGameSimplified";
 
 export function useGames() {
     const [games, setGames] = useState<IGameSimplified[]>([])

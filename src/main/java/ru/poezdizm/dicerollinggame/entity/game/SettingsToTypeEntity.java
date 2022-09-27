@@ -1,9 +1,10 @@
-package ru.poezdizm.dicerollinggame.entity;
+package ru.poezdizm.dicerollinggame.entity.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.poezdizm.dicerollinggame.entity.CellTypeEntity;
 
 import javax.persistence.*;
 

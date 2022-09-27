@@ -3,6 +3,7 @@ package ru.poezdizm.dicerollinggame.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import ru.poezdizm.dicerollinggame.entity.game.GameToPlayerEntity;
 
 import javax.persistence.*;
 
