@@ -40,6 +40,6 @@ public class GameSettingsEntity {
     @Column(name = "created_at")
     private Timestamp timeOfCreation;
 
-    @OneToMany(mappedBy = "settings", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "settings", cascade=CascadeType.ALL)
     private List<SettingsToTypeEntity> typeValues;
 }

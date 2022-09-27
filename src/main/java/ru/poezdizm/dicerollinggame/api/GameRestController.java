@@ -1,8 +1,10 @@
 package ru.poezdizm.dicerollinggame.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.dicerollinggame.model.GameSimplifiedModel;
+import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameService;
 
 import java.security.Principal;
@@ -19,5 +21,15 @@ public class GameRestController {
     @GetMapping("/all")
     public List<GameSimplifiedModel> getGames(Principal principal) {
         return gameService.getGamesByCurrentUser(principal.getName());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<MessageResponse> deleteGame(@RequestParam("id") Long gameId, Principal principal) {
+        try {
+            gameService.deleteGameAndSettings(gameId, principal.getName());
+            return ResponseEntity.ok().body(new MessageResponse("Game was deleted successfully"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

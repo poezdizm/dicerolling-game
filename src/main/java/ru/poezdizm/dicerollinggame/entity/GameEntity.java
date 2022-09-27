@@ -24,10 +24,10 @@ public class GameEntity {
     @JoinColumn(name = "settings_id")
     private GameSettingsEntity gameSettings;
 
-    @OneToMany(mappedBy = "game", cascade=CascadeType.PERSIST)
+    @OneToMany(mappedBy = "game", cascade=CascadeType.ALL)
     private List<GameBoardEntity> gameBoards;
 
-    @OneToMany(mappedBy = "game", cascade=CascadeType.PERSIST)
+    @OneToMany(mappedBy = "game", cascade=CascadeType.ALL)
     private List<GameToPlayerEntity> gamePlayers;
 
 }

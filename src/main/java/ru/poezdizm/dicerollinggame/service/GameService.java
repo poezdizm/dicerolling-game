@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.*;
 import ru.poezdizm.dicerollinggame.model.GameSimplifiedModel;
 import ru.poezdizm.dicerollinggame.repository.GameRepository;
+import ru.poezdizm.dicerollinggame.repository.GameSettingsRepository;
 
 import java.util.*;
 
@@ -13,6 +14,8 @@ import java.util.*;
 public class GameService {
 
     private final GameRepository gameRepository;
+
+    private final GameSettingsRepository settingsRepository;
 
     private final CellService cellService;
 
@@ -67,6 +70,10 @@ public class GameService {
         }
 
         ArrayList<CellEntity> randomCells = cellService.getRandomCellList(random, settings.getMaxCellNumber());
+        if (sharedCell != null && randomCells.contains(sharedCell.getCell())) {
+            CellEntity cellBuffer = randomCells.get(sharedCell.getPosition() - 1);
+            randomCells.set(randomCells.indexOf(sharedCell.getCell()), cellBuffer);
+        }
 
         List<GameCellEntity> gameCells = new ArrayList<>();
         for (int i = 1; i <= settings.getMaxCellNumber(); i++) {
@@ -91,6 +98,17 @@ public class GameService {
         }
 
         return board;
+    }
+
+    public void deleteGameAndSettings(Long gameId, String username) throws IllegalArgumentException {
+        GameEntity gameToDelete = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+        GameSettingsEntity settings = gameToDelete.getGameSettings();
+        if (!Objects.equals(settings.getOwner().getUsername(), username)) {
+            throw new IllegalArgumentException("User is not an owner of this game");
+        }
+        gameRepository.delete(gameToDelete);
+        settingsRepository.delete(settings);
     }
 
     private static GameSimplifiedModel mapSimplifiedGame(GameEntity entity) {

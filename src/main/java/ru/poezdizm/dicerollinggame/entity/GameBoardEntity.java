@@ -28,6 +28,6 @@ public class GameBoardEntity {
     @JoinColumn(name = "player_id")
     private UserEntity player;
 
-    @OneToMany(mappedBy = "board", cascade=CascadeType.PERSIST)
+    @OneToMany(mappedBy = "board", cascade=CascadeType.ALL)
     private List<GameCellEntity> gameCells;
 }
