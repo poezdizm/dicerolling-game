@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {ProgressBar, Row} from "react-bootstrap";
 import {IPlayer} from "../../models/game/IPlayer";
 
@@ -22,7 +22,7 @@ function PlayerRow(props: PlayerRowProps) {
                         <div className={"player-roll"}>1</div>
                     </div>
                     :
-                    <div className={"players-row"}>
+                    <div className={"players-row players-placeholder"}>
                         <p>Waiting for player...</p>
                     </div>
                 }

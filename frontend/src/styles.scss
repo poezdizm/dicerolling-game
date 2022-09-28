@@ -28,11 +28,23 @@
 
   .players-row {
     justify-content: center;
-    margin-top: 10px;
+    margin-bottom: 10px;
+
+    h2 {
+      margin-top: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid black;
+    }
+
+    &.players-placeholder {
+      border-bottom: 1px solid black;
+    }
 
     &.players-info {
       display: flex;
       justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid black;
 
       .player-username {
         font-size: 25px;
@@ -73,6 +85,7 @@
 
     &.col-board {
       background-color: #2f4c6a;
+      border-left: 3px solid black;
     }
   }
 

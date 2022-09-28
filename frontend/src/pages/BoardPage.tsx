@@ -51,12 +51,13 @@ function BoardPage() {
     }, [game])
 
     function initPlayers(playerArray: IPlayer[], max: number) {
+        setPlayers([])
         playerArray.forEach(player => {
             pushToPlayers(player)
         })
 
         if (playerArray.length < max) {
-            for (let i = playerArray.length; i <= max; i++) {
+            for (let i = playerArray.length; i < max; i++) {
                 pushToPlayers({"username": i.toString(), "position": 0})
             }
         }
@@ -83,8 +84,9 @@ function BoardPage() {
                             <Col sm={3} className={"col-players board-col"}>
                                 <Row className={"players-row"}>
                                     <h2>Players</h2>
-                                    {players.map(player => <PlayerRow player={player} max={game.cells.length + 1}
-                                                                      key={player.username}/>)}
+                                    {players.map(player => <PlayerRow player={player}
+                                                                               max={game.cells.length + 1}
+                                                                               key={player.username}/>)}
                                 </Row>
                             </Col>
                             <Col sm={9} className={"col-board board-col"}>
