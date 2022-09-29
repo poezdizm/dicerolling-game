@@ -11,7 +11,8 @@ import PlayerIcon from "../components/board/PlayerIcon";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import GameCellDummy from "../components/board/GameCellDummy";
-import {IGameCell} from "../models/game/IGameCell";
+import {useSubscription} from "react-stomp-hooks";
+import {authHeaderStomp} from "../service/hooks/auth-header-stomp";
 
 function BoardPage() {
 
@@ -33,6 +34,23 @@ function BoardPage() {
     const [players, setPlayers] = useState<IPlayer[]>([])
     const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(
         {"username": loggedInUser.username.toString(), "position": 0})
+
+    useSubscription("/topic/game-message-" + loggedInUser.username,
+        (message) => setGameFromMessage(message.body),
+        authHeaderStomp());
+
+    function isGame(o: any): o is IGame {
+        return "id" in o && "title" in o && "cells" in o && "players" in o && "isStarted" in o && "playersMax" in o
+    }
+
+    function setGameFromMessage(message: string) {
+        console.log(message)
+        const parsed = JSON.parse(message);
+        if (isGame(parsed)) {
+            setGame(parsed)
+        }
+    }
+
 
     useEffect(() => {
         let gameId = searchParams.get("id")
@@ -91,8 +109,6 @@ function BoardPage() {
             currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition));
 
     }
-
-    useEffect(() => console.log(currentPlayer), [currentPlayer])
 
     if (!isSignedIn) {
         return <Navigate to="/login"/>

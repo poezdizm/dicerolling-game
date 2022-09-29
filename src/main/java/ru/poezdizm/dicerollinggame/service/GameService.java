@@ -1,6 +1,7 @@
 package ru.poezdizm.dicerollinggame.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.*;
 import ru.poezdizm.dicerollinggame.entity.game.*;
@@ -23,6 +24,8 @@ public class GameService {
 
     private final CellService cellService;
 
+    private final SimpMessagingTemplate webSocket;
+
     public List<GameSimplifiedModel> getGamesByCurrentUser(String username) {
         return gameRepository.findAllByGamePlayers_Player_Username(username)
                 .stream().map(GameService::mapSimplifiedGame).toList();
@@ -33,23 +36,39 @@ public class GameService {
                 .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User was not found"));
+
+        boolean newJoin = false;
         if (game.getGamePlayers().stream()
                 .filter(player -> Objects.equals(player.getPlayer().getUsername(), username)).toList().isEmpty()) {
             game = joinGame(game, user);
+            newJoin = true;
         }
 
-        return mapGame(game, user);
+        GameModel model = mapGame(game, user);
+        if (newJoin) {
+            broadcastGame(model, username);
+        }
+        return model;
     }
 
     private GameEntity joinGame(GameEntity game, UserEntity user) throws IllegalArgumentException {
-        GameBoardEntity board = game.getGameBoards().stream().filter(it -> it.getPlayer() == null)
-                .findAny().orElseThrow(() -> new IllegalArgumentException("Game has no more space for players"));
-        GameToPlayerEntity player = game.getGamePlayers().stream().filter(Objects::isNull)
-                .findAny().orElseThrow(() -> new IllegalArgumentException("Game has no more space for players"));
+        GameToPlayerEntity player = new GameToPlayerEntity();
 
+        player.setGame(game);
         player.setPlayer(user);
         player.setPosition(0);
-        board.setPlayer(user);
+        game.getGamePlayers().add(player);
+
+        if (!game.getGameSettings().getIsShared()) {
+            List<GameBoardEntity> boards = game.getGameBoards().stream().filter(it -> it.getPlayer() == null).toList();
+            GameBoardEntity board = boards.stream().findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("Game has no more space for players"));
+            board.setPlayer(user);
+        }
+
+        if (game.getGamePlayers().size() == game.getGameSettings().getPlayersNumber()) {
+            game.setIsStarted(true);
+        }
 
         return gameRepository.save(game);
     }
@@ -153,12 +172,13 @@ public class GameService {
                 .playersMax(game.getGameSettings().getPlayersNumber())
                 .isStarted(game.getIsStarted()).build();
 
-        GameBoardEntity board = game.getGameBoards().stream()
+        GameBoardEntity board = game.getGameSettings().getIsShared() ?  game.getGameBoards().get(0) :
+                game.getGameBoards().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), currentPlayer.getUsername())).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
         GameToPlayerEntity player = game.getGamePlayers().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), currentPlayer.getUsername())).findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
+                .orElseThrow(() -> new IllegalArgumentException("Player is not in this game"));
 
         List<GameCellModel> gameCells = new ArrayList<>();
         for (GameCellEntity cell : board.getGameCells()) {
@@ -183,6 +203,15 @@ public class GameService {
         }
 
         return player;
+    }
+
+    private void broadcastGame(GameModel game, String usernameToExclude) {
+        for (PlayerModel playerToSend : game.getPlayers()){
+            String usernameToSend = playerToSend.getUsername();
+            if (!Objects.equals(usernameToSend, usernameToExclude)) {
+                webSocket.convertAndSend("/topic/game-message-" + usernameToSend, game);
+            }
+        }
     }
 
     private static GameCellModel mapGameCell(GameCellEntity entity, boolean isReadable, Boolean isAvailable) {

@@ -9,11 +9,14 @@ import {RegisterPage} from "./pages/RegisterPage";
 import {AddCellsPage} from "./pages/AddCellsPage";
 import NewGamePage from "./pages/NewGamePage";
 import BoardPage from "./pages/BoardPage";
+import {StompSessionProvider} from "react-stomp-hooks";
+import {authHeaderStomp} from "./service/hooks/auth-header-stomp";
 
 function App() {
 
     return (
-        <>
+        <StompSessionProvider
+            url={"http://192.168.0.104:8080/messages"} connectHeaders={authHeaderStomp()}>
             <Navigation/>
             <Routes>
                 <Route path="/" element={<MainPage/>}/>
@@ -23,7 +26,7 @@ function App() {
                 <Route path="/new" element={<NewGamePage/>}/>
                 <Route path="/game" element={<BoardPage/>}/>
             </Routes>
-        </>
+        </StompSessionProvider>
     );
 }
 
