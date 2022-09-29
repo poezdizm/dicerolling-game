@@ -1,18 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Container, Row, Stack} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 import {Navigate, useSearchParams} from "react-router-dom";
 import {IGame} from "../models/game/IGame";
 import GameService from "../service/game-service";
 import GameCell from "../components/board/GameCell";
 import {IPlayer} from "../models/game/IPlayer";
-import {ICellType} from "../models/ICellType";
-import {ITypeValue} from "../models/ITypeValue";
 import PlayerRow from "../components/board/PlayerRow";
+import PlayerIcon from "../components/board/PlayerIcon";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
+import GameCellDummy from "../components/board/GameCellDummy";
+import {IGameCell} from "../models/game/IGameCell";
 
 function BoardPage() {
 
     const isSignedIn = AuthService.isSignedIn()
+    const loggedInUser = AuthService.getUser()
     const [gameFound, setGameFound] = useState(true)
 
     const [columns, setColumns] = useState(3)
@@ -20,11 +24,15 @@ function BoardPage() {
         gridTemplateColumns: "repeat(" + columns + ", 1fr)"
     }
 
-    const [game, setGame] = useState<IGame>({"id": 0, "title": "Game", "cells": [],
-        "players": [], "isStarted": false, "playersMax": 1})
+    const [game, setGame] = useState<IGame>({
+        "id": 0, "title": "Game", "cells": [],
+        "players": [], "isStarted": false, "playersMax": 0
+    })
     const [searchParams, setSearchParams] = useSearchParams()
 
     const [players, setPlayers] = useState<IPlayer[]>([])
+    const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(
+        {"username": loggedInUser.username.toString(), "position": 0})
 
     useEffect(() => {
         let gameId = searchParams.get("id")
@@ -53,6 +61,9 @@ function BoardPage() {
     function initPlayers(playerArray: IPlayer[], max: number) {
         setPlayers([])
         playerArray.forEach(player => {
+            if (player.username === currentPlayer.username) {
+                setCurrentPlayer({"username": player.username, "position": player.position})
+            }
             pushToPlayers(player)
         })
 
@@ -64,8 +75,24 @@ function BoardPage() {
     }
 
     function pushToPlayers(newElement: IPlayer) {
-        setPlayers(prevPlayers => [...prevPlayers, newElement]);
+        setPlayers(prevPlayers => ([...prevPlayers, newElement]));
     }
+
+    function movePlayer(newPosition: number) {
+        setCurrentPlayer({"username": currentPlayer.username, "position": newPosition})
+        setPlayers(players.map(player => currentPlayer.username === player.username ?
+            {...player, position: newPosition} :
+            {...player}
+        ))
+    }
+
+    function canMovePlayer(newPosition: number): boolean {
+        return !!(newPosition === 0 || (game.isStarted &&
+            currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition));
+
+    }
+
+    useEffect(() => console.log(currentPlayer), [currentPlayer])
 
     if (!isSignedIn) {
         return <Navigate to="/login"/>
@@ -76,7 +103,7 @@ function BoardPage() {
     }
 
     return (
-        <>
+        <DndProvider backend={HTML5Backend}>
             <div className="App">
                 <header className="App-header board">
                     <Container className="basic-container board">
@@ -85,8 +112,8 @@ function BoardPage() {
                                 <Row className={"players-row"}>
                                     <h2>Players</h2>
                                     {players.map(player => <PlayerRow player={player}
-                                                                               max={game.cells.length + 1}
-                                                                               key={player.username}/>)}
+                                                                      max={game.cells.length + 1}
+                                                                      key={player.username}/>)}
                                 </Row>
                             </Col>
                             <Col sm={9} className={"col-board board-col"}>
@@ -95,15 +122,34 @@ function BoardPage() {
                                 </Row>
                                 <Row className={"board-row board-grid"}>
                                     <div style={containerStyle} className={"board-container"}>
-                                        <div className={"game-cell-div"}>
-                                            <div className={"cell-gap"}></div>
-                                            <div className={"game-cell start-cell"}></div>
-                                        </div>
-                                        {game.cells.map(cell => <GameCell cell={cell} key={cell.position}/>)}
-                                        <div className={"game-cell-div"}>
-                                            <div className={"cell-gap"}></div>
-                                            <div className={"game-cell finish-cell"}></div>
-                                        </div>
+                                        <GameCellDummy position={0} className={"start-cell"}
+                                                       game={game} players={players} moveIcon={movePlayer}
+                                                       canMove={canMovePlayer}
+                                                       children={
+                                                           players.map(player => player.position === 0 ?
+                                                               <PlayerIcon player={player} currentPlayer={currentPlayer}
+                                                                           key={player.username}/> : null)
+                                                       }
+                                        />
+                                        {game.cells.map(cell =>
+                                                <GameCell cell={cell} players={players} game={game}
+                                                          moveIcon={movePlayer} canMove={canMovePlayer}
+                                                          children={
+                                                              players.map(player => cell.position === player.position ?
+                                                                  <PlayerIcon player={player}
+                                                                              currentPlayer={currentPlayer}
+                                                                              key={player.username}/> : null)
+                                                          }
+                                                          key={cell.position}/>)}
+                                        <GameCellDummy position={game.cells.length + 1} className={"finish-cell"}
+                                                       game={game} players={players} moveIcon={movePlayer}
+                                                       canMove={canMovePlayer}
+                                                       children={
+                                                           players.map(player => player.position === (game.cells.length + 1) ?
+                                                               <PlayerIcon player={player} currentPlayer={currentPlayer}
+                                                                           key={player.username}/> : null)
+                                                       }
+                                        />
                                     </div>
                                 </Row>
                                 <Row className={"board-row"}>
@@ -114,7 +160,7 @@ function BoardPage() {
                     </Container>
                 </header>
             </div>
-        </>
+        </DndProvider>
     )
 }
 

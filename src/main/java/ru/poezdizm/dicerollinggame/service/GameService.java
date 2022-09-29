@@ -169,6 +169,7 @@ public class GameService {
             boolean isReadable = player.getPosition() == cell.getPosition();
             gameCells.add(mapGameCell(cell, isReadable, isAvailable));
         }
+        gameCells.sort(Comparator.comparing(GameCellModel::getPosition));
         gameModel.setCells(gameCells);
 
         return gameModel;

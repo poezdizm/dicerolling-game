@@ -129,6 +129,27 @@
   }
 }
 
+.player-icon {
+  display: inline-table;
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  text-align: center;
+  opacity: 1;
+  cursor: move;
+
+  p {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    margin-bottom: 0;
+    font-size: 15px;
+    transform: translate(-50%, -50%);
+    color: black;
+    font-weight: 700;
+  }
+}
+
 .basic-tooltip {
   margin-left: 10px;
 }
