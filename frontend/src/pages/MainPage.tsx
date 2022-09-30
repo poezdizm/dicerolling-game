@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {createRef, useEffect, useState} from "react";
 import logo from "../logo.svg";
 import AuthService from "../service/auth-service";
 import {Col, Container, Row, Card, Toast, ListGroup} from "react-bootstrap";
@@ -7,6 +7,7 @@ import GameListItem from "../components/GameListItem";
 import {IGameSimplified} from "../models/game/IGameSimplified";
 import GameService from "../service/game-service";
 import {Link} from "react-router-dom";
+import Utils from "../service/utils";
 
 export function MainPage() {
 
@@ -15,12 +16,32 @@ export function MainPage() {
     const isSignedIn = AuthService.isSignedIn()
     const {games} = useGames()
 
+    useEffect(() => {
+        adjustListPadding()
+    }, [])
+
     function showToast() {
         setShow(true)
     }
 
     function deleteGame(game: IGameSimplified) {
         GameService.deleteGame(game.id).then(() => window.location.reload())
+    }
+
+    const listElem = createRef<HTMLDivElement>();
+
+    function adjustListPadding() {
+        if (listElem.current) {
+            try {
+                if (Utils.isOverflownY(listElem.current)) {
+                    listElem.current.style.paddingRight = 10 + 'px'
+                } else {
+                    listElem.current.style.paddingRight = 0 + 'px'
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
     }
 
     return (
@@ -39,18 +60,20 @@ export function MainPage() {
                                                 <h2 className={"ng-heading"}>My games</h2>
                                             </Card.Header>
                                             <Card.Body>
-                                                <ListGroup className={"cell-list"}>
-                                                    {games.map(game => <GameListItem game={game} showToast={showToast}
-                                                                                     onDelete={deleteGame}
-                                                                                     key={game.id} />)}
-                                                    {games.length == 0 &&
-                                                        <div className={"main-heading-container"}>
-                                                            <p className={"main-heading"}>No active games.<br/>
-                                                                Try <Link className={"main-link"}
-                                                                         to={"/new"} >creating</Link> one now.</p>
-                                                        </div>
-                                                    }
-                                                </ListGroup>
+                                                <div className="cell-list" ref={listElem}>
+                                                    <ListGroup>
+                                                        {games.map(game => <GameListItem game={game} showToast={showToast}
+                                                                                         onDelete={deleteGame}
+                                                                                         key={game.id} />)}
+                                                        {games.length == 0 &&
+                                                            <div className={"main-heading-container"}>
+                                                                <p className={"main-heading"}>No active games.<br/>
+                                                                    Try <Link className={"main-link"}
+                                                                             to={"/new"} >creating</Link> one now.</p>
+                                                            </div>
+                                                        }
+                                                    </ListGroup>
+                                                </div>
                                             </Card.Body>
                                         </Card>
                                     </Col>

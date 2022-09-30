@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.CellEntity;
 import ru.poezdizm.dicerollinggame.entity.CellTypeEntity;
+import ru.poezdizm.dicerollinggame.entity.game.SettingsToTypeEntity;
 import ru.poezdizm.dicerollinggame.exception.ValidationException;
 import ru.poezdizm.dicerollinggame.model.CellModel;
 import ru.poezdizm.dicerollinggame.model.CellTypeModel;
@@ -13,6 +14,7 @@ import ru.poezdizm.dicerollinggame.repository.CellTypeRepository;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +37,10 @@ public class CellService {
 
     public long countCells() {
         return cellRepository.count();
+    }
+
+    public long countCellsByTypeId(Integer typeId) {
+        return cellRepository.countAllByType_Id(typeId);
     }
 
     public CellModel getCellById(Long id) {
@@ -93,21 +99,23 @@ public class CellService {
                 .build();
     }
 
-    public ArrayList<CellEntity> getRandomCellList(Random random, Integer numberOfElements) {
-        List<CellEntity> allCells = cellRepository.findAll();
-        Long count = countCells();
-        if (numberOfElements > count) {
-            numberOfElements = count.intValue();
-        }
-
+    public ArrayList<CellEntity> getRandomCellList(Random random, List<SettingsToTypeEntity> typeValues) {
         ArrayList<CellEntity> randomCells = new ArrayList<>();
-        for (int i = 0; i < numberOfElements; i++) {
-            int randomIndex = random.nextInt(count.intValue());
-            CellEntity randomCell = allCells.get(randomIndex);
-            randomCells.add(randomCell);
-            allCells.remove(randomCell);
-            count--;
+
+        for (SettingsToTypeEntity typeValue: typeValues) {
+            List<CellEntity> allCells = cellRepository.findAllByType_Id(typeValue.getType().getId());
+            Long count = countCellsByTypeId(typeValue.getType().getId());
+            int numberOfElements = typeValue.getValue() > count ? count.intValue() : typeValue.getValue();
+
+            for (int i = 0; i < numberOfElements; i++) {
+                int randomIndex = random.nextInt(count.intValue());
+                CellEntity randomCell = allCells.get(randomIndex);
+                randomCells.add(randomCell);
+                allCells.remove(randomCell);
+                count--;
+            }
         }
+        Collections.shuffle(randomCells);
 
         return randomCells;
     }

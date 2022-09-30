@@ -17,6 +17,7 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameSettingsRepository settingsRepository;
     private final RollHistoryRepository rollHistoryRepository;
+    private final GameToPlayerRepository playerRepository;
 
     private final UserRepository userRepository;
 
@@ -42,11 +43,10 @@ public class GameService {
             newJoin = true;
         }
 
-        GameModel model = mapGame(game, user);
         if (newJoin) {
-            broadcastGame(model, username);
+            broadcastGame(game, username);
         }
-        return model;
+        return mapGame(game, user);
     }
 
     private GameEntity joinGame(GameEntity game, UserEntity user) throws IllegalArgumentException {
@@ -118,7 +118,7 @@ public class GameService {
             grayZoneEnd = grayZoneStart + settings.getGrayZoneNumber() - 1;
         }
 
-        ArrayList<CellEntity> randomCells = cellService.getRandomCellList(random, settings.getMaxCellNumber());
+        ArrayList<CellEntity> randomCells = cellService.getRandomCellList(random, settings.getTypeValues());
         if (sharedCell != null && randomCells.contains(sharedCell.getCell())) {
             CellEntity cellBuffer = randomCells.get(sharedCell.getPosition() - 1);
             randomCells.set(randomCells.indexOf(sharedCell.getCell()), cellBuffer);
@@ -160,11 +160,9 @@ public class GameService {
         settingsRepository.delete(settings);
     }
 
-    public void saveRoll(RollRequest request, String username) throws IllegalArgumentException {
+    public void saveRoll(GenericRequest request, String username) throws IllegalArgumentException {
         GameEntity game = gameRepository.findById(request.getGameId())
                 .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User was not found"));
         GameToPlayerEntity player = game.getGamePlayers().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
@@ -178,7 +176,40 @@ public class GameService {
         RollHistory lastRoll = rollHistoryRepository.save(roll);
         player.setLastRoll(lastRoll);
 
-        broadcastGame(mapGame(game, user), username);
+        broadcastGame(game, username);
+    }
+
+    public void savePosition(GenericRequest request, String username) throws IllegalArgumentException {
+        GameEntity game = gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+        GameToPlayerEntity player = game.getGamePlayers().stream()
+                .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
+                .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
+
+        if (player.getLastRoll() != null &&
+                ((player.getPosition() + player.getLastRoll().getRollValue()) == request.getValue() ||
+                (request.getValue() == (game.getGameSettings().getMaxCellNumber() + 1) &&
+                        (player.getPosition() + player.getLastRoll().getRollValue()) > request.getValue()))) {
+            player.setPosition(request.getValue());
+            playerRepository.save(player);
+
+            broadcastGame(game, username);
+        } else {
+            GameBoardEntity board = game.getGameSettings().getIsShared() ?  game.getGameBoards().get(0) :
+                    game.getGameBoards().stream()
+                            .filter(it -> Objects.equals(it.getPlayer().getUsername(), player.getPlayer().getUsername())).findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
+            if (board.getGameCells().stream().anyMatch(cell ->
+                    Objects.equals(cell.getPosition(), player.getPosition()) && cell.getIsGray()) &&
+                    (player.getPosition() - 1) == request.getValue()) {
+                player.setPosition(request.getValue());
+                playerRepository.save(player);
+
+                broadcastGame(game, username);
+            } else {
+                throw new IllegalArgumentException("Position is not allowed");
+            }
+        }
     }
 
     private static GameSimplifiedModel mapSimplifiedGame(GameEntity entity) {
@@ -201,7 +232,7 @@ public class GameService {
 
         List<GameCellModel> gameCells = new ArrayList<>();
         for (GameCellEntity cell : board.getGameCells()) {
-            boolean isReadable = player.getPosition() == cell.getPosition();
+            boolean isReadable = Objects.equals(player.getPosition(), cell.getPosition());
             gameCells.add(mapGameCell(cell, isReadable));
         }
         gameCells.sort(Comparator.comparing(GameCellModel::getPosition));
@@ -220,11 +251,13 @@ public class GameService {
         return player;
     }
 
-    private void broadcastGame(GameModel game, String usernameToExclude) {
-        for (PlayerModel playerToSend : game.getPlayers()){
-            String usernameToSend = playerToSend.getUsername();
+    private void broadcastGame(GameEntity game, String usernameToExclude) {
+        List<UserEntity> users = game.getGamePlayers().stream().map(GameToPlayerEntity::getPlayer).toList();
+        for (UserEntity user : users) {
+            String usernameToSend = user.getUsername();
             if (!Objects.equals(usernameToSend, usernameToExclude)) {
-                webSocket.convertAndSend("/topic/game-message-" + usernameToSend + "-game-" + game.getId(), game);
+                GameModel model = mapGame(game, user);
+                webSocket.convertAndSend("/topic/game-message-" + usernameToSend + "-game-" + game.getId(), model);
             }
         }
     }

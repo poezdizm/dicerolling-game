@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Row, Card} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 import {Navigate, useSearchParams} from "react-router-dom";
 import {IGame} from "../models/game/IGame";
@@ -14,6 +14,7 @@ import GameCellDummy from "../components/board/GameCellDummy";
 import {useSubscription} from "react-stomp-hooks";
 import {authHeaderStomp} from "../service/hooks/auth-header-stomp";
 import Dice from "react-dice-roll";
+import {IGameCell} from "../models/game/IGameCell";
 
 function BoardPage() {
 
@@ -35,6 +36,8 @@ function BoardPage() {
     const [players, setPlayers] = useState<IPlayer[]>([])
     const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(
         {"username": loggedInUser.username.toString(), "position": 0})
+
+    const [currentContent, setCurrentContent] = useState("")
 
     useSubscription("/topic/game-message-" + loggedInUser.username + "-game-" + game.id,
         (message) => setGameFromMessage(message.body),
@@ -75,14 +78,23 @@ function BoardPage() {
         setColumns(columnNumber)
 
         initPlayers(game.players, game.playersMax)
+
+        setContent(game.cells)
     }, [game])
+
+    function setContent(cells: IGameCell[]) {
+        let content = cells.find(cell => cell.content)?.content
+        setCurrentContent(content ? content : "")
+    }
 
     function initPlayers(playerArray: IPlayer[], max: number) {
         setPlayers([])
         playerArray.forEach(player => {
             if (player.username === currentPlayer.username) {
-                setCurrentPlayer({"username": player.username, "position": player.position,
-                    "lastRollValue": player.lastRollValue})
+                setCurrentPlayer({
+                    "username": player.username, "position": player.position,
+                    "lastRollValue": player.lastRollValue
+                })
             }
             pushToPlayers(player)
         })
@@ -99,11 +111,9 @@ function BoardPage() {
     }
 
     function movePlayer(newPosition: number) {
-        setCurrentPlayer({"username": currentPlayer.username, "position": newPosition})
-        setPlayers(players.map(player => currentPlayer.username === player.username ?
-            {...player, position: newPosition} :
-            {...player}
-        ))
+        GameService.sendPosition(game.id, newPosition).then(result => {
+            setGame(result)
+        })
     }
 
     function setRoll(value: number) {
@@ -118,9 +128,13 @@ function BoardPage() {
     }
 
     function canMovePlayer(newPosition: number): boolean {
-        console.log(currentPlayer.lastRollValue)
-        return !!(newPosition === 0 || (
-            currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition));
+        return !!((currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition) ||
+            (game.cells.filter(cell => cell.position === currentPlayer.position && cell.isGray).length > 0 &&
+                (currentPlayer.position - 1) === newPosition));
+    }
+
+    function canMoveToFinish(newPosition: number): boolean {
+        return !!(currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) >= newPosition);
     }
 
     if (!isSignedIn) {
@@ -164,19 +178,19 @@ function BoardPage() {
                                                        }
                                         />
                                         {game.cells.map(cell =>
-                                                <GameCell cell={cell} players={players} game={game}
-                                                          currentPlayer={currentPlayer}
-                                                          moveIcon={movePlayer} canMove={canMovePlayer}
-                                                          children={
-                                                              players.map(player => cell.position === player.position ?
-                                                                  <PlayerIcon player={player}
-                                                                              currentPlayer={currentPlayer}
-                                                                              key={player.username}/> : null)
-                                                          }
-                                                          key={cell.position}/>)}
+                                            <GameCell cell={cell} players={players} game={game}
+                                                      currentPlayer={currentPlayer}
+                                                      moveIcon={movePlayer} canMove={canMovePlayer}
+                                                      children={
+                                                          players.map(player => cell.position === player.position ?
+                                                              <PlayerIcon player={player}
+                                                                          currentPlayer={currentPlayer}
+                                                                          key={player.username}/> : null)
+                                                      }
+                                                      key={cell.position}/>)}
                                         <GameCellDummy position={game.cells.length + 1} className={"finish-cell"}
                                                        game={game} players={players} moveIcon={movePlayer}
-                                                       canMove={canMovePlayer} currentPlayer={currentPlayer}
+                                                       canMove={canMoveToFinish} currentPlayer={currentPlayer}
                                                        children={
                                                            players.map(player => player.position === (game.cells.length + 1) ?
                                                                <PlayerIcon player={player} currentPlayer={currentPlayer}
@@ -185,8 +199,12 @@ function BoardPage() {
                                         />
                                     </div>
                                 </Row>
-                                <Row className={"board-row"}>
-                                    <h2>{game.title}</h2>
+                                <Row className={"board-row board-card-row"}>
+                                    {currentContent &&
+                                        <Card className={"content-card"}>
+                                            <p>{currentContent}</p>
+                                        </Card>
+                                    }
                                 </Row>
                             </Col>
                         </Row>

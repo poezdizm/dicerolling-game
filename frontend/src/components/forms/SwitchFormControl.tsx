@@ -13,7 +13,7 @@ interface SwitchFormControlProps {
 function SwitchFormControl(props: SwitchFormControlProps) {
 
     return (
-        <Form.Group className={"mb-3 ng-group " + (!props.isSmall ? "mt-3" : "")}>
+        <Form.Group className={"mb-2 ng-group " + (!props.isSmall ? "mt-2" : "")}>
             <Form.Label className={"ng-label "  + (props.isSmall ? "ng-label-sm" : "ng-label-md")}>
                 {props.label}
                 {props.tooltip && <BasicTooltip text={props.tooltip} />}

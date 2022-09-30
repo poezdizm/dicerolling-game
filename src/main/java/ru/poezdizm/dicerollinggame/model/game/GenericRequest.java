@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class RollRequest {
+public class GenericRequest {
 
     private Long gameId;
     private Integer value;

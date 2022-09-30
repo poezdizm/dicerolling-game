@@ -52,7 +52,7 @@ function CellTypeFormControl(props: CTFormControlProps) {
     }, [localValid])
 
     return (
-        <Form.Group className="mb-3 mt-2 ng-group">
+        <Form.Group className="mb-2 mt-1 ng-group">
             <Form.Label className={"ng-label ng-label-sm"}>{props.cellType.label}</Form.Label>
             <div className={"ng-control-container"}>
                 <InputGroup className={"ng-control ng-control-sm"}>

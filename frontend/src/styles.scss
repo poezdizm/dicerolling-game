@@ -21,8 +21,25 @@
     align-items: center;
     min-height: 70px;
 
+    &.board-card-row {
+      justify-content: center;
+    }
+
     &.board-grid {
       min-height: 65%;
+    }
+
+    .content-card {
+      color: black;
+      width: fit-content;
+      height: fit-content;
+      min-width: 20%;
+      max-width: 90%;
+
+      p {
+        margin-top: 0.3em;
+        margin-bottom: 0.3em;
+      }
     }
   }
 
@@ -183,11 +200,11 @@
 }
 
 .main-card {
-  height: 700px !important;
+  height: 600px !important;
 }
 
 .cell-list {
-  height: 600px !important;
+  height: 500px !important;
   padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;

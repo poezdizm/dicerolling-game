@@ -63,7 +63,7 @@ function NumberFormControl(props: NumberFormControlProps) {
     }, [localValid])
 
     return (
-        <Form.Group className="mb-3 mt-3 ng-group">
+        <Form.Group className="mb-2 mt-2 ng-group">
             <Form.Label className={"ng-label " + (props.isSmall ? "ng-label-sm" : "ng-label-md")}>
                 {props.label}
                 {props.tooltip && <BasicTooltip text={props.tooltip} />}

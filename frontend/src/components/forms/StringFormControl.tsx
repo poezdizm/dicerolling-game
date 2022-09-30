@@ -14,7 +14,7 @@ interface StringFormControlProps {
 function StringFormControl(props: StringFormControlProps) {
 
     return (
-        <Form.Group className="mb-3 mt-3 ng-group">
+        <Form.Group className="mb-2 mt-2 ng-group">
             <Form.Label className={"ng-label"}>
                 {props.label}
                 {props.tooltip && <BasicTooltip text={props.tooltip} />}

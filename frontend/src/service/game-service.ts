@@ -16,10 +16,16 @@ const sendRoll = (gameId: number, value: number) => {
         .then(response => {return response.data})
 }
 
+const sendPosition = (gameId: number, value: number) => {
+    return http.post("/game/position", {"gameId": gameId, "value": value}, {headers: authHeader()})
+        .then(response => {return response.data})
+}
+
 const GameService = {
     getGame,
     deleteGame,
-    sendRoll
+    sendRoll,
+    sendPosition
 };
 
 export default GameService;

@@ -115,11 +115,11 @@ export function AddCellsPage() {
                                             </Form.Group>
                                         </Form>
                                         <div className="cell-list" ref={listElem}>
-                                        <ListGroup>
-                                            {cells.map(cell => <CellListItem cell={cell} key={cell.id}
-                                                                             openEdit={openEditModal}
-                                                                             openDelete={openDeleteModal}/>)}
-                                        </ListGroup>
+                                            <ListGroup>
+                                                {cells.map(cell => <CellListItem cell={cell} key={cell.id}
+                                                                                 openEdit={openEditModal}
+                                                                                 openDelete={openDeleteModal}/>)}
+                                            </ListGroup>
                                         </div>
                                     </Card.Body>
                                 </Card>

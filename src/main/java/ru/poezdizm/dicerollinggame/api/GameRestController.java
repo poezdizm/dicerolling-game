@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.dicerollinggame.model.game.GameModel;
 import ru.poezdizm.dicerollinggame.model.game.GameSimplifiedModel;
-import ru.poezdizm.dicerollinggame.model.game.RollRequest;
+import ru.poezdizm.dicerollinggame.model.game.GenericRequest;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameService;
 
@@ -41,8 +41,14 @@ public class GameRestController {
     }
 
     @PostMapping("/roll")
-    public ResponseEntity<MessageResponse> saveRoll(@RequestBody RollRequest request, Principal principal) {
+    public ResponseEntity<MessageResponse> saveRoll(@RequestBody GenericRequest request, Principal principal) {
         gameService.saveRoll(request, principal.getName());
         return ResponseEntity.ok().body(new MessageResponse("Roll was saved successfully"));
+    }
+
+    @PostMapping("/position")
+    public ResponseEntity<GameModel> savePosition(@RequestBody GenericRequest request, Principal principal) {
+        gameService.savePosition(request, principal.getName());
+        return ResponseEntity.ok().body(gameService.getGame(request.getGameId(), principal.getName()));
     }
 }

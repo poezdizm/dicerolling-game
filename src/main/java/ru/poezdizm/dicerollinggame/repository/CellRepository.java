@@ -13,4 +13,8 @@ public interface CellRepository extends JpaRepository<CellEntity, Long> {
     List<CellEntity> findAllByOrderByTimeOfCreationDesc();
     Optional<CellEntity> findByContent(String content);
 
+    List<CellEntity> findAllByType_Id(Integer typeId);
+
+    Long countAllByType_Id(Integer typeId);
+
 }
