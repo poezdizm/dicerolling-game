@@ -1,4 +1,4 @@
-package ru.poezdizm.dicerollinggame.entity;
+package ru.poezdizm.dicerollinggame.entity.game;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ public class RollHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
     @Column(name = "roll_value")
     private int rollValue;
 

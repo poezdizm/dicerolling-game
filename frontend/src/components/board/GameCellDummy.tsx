@@ -7,6 +7,7 @@ interface GameCellProps {
     className?: string,
     position: number,
     game: IGame,
+    currentPlayer: IPlayer,
     players: IPlayer[],
     children?: React.ReactNode,
     canMove: (position: number) => boolean,
@@ -22,7 +23,7 @@ function GameCellDummy(props: GameCellProps) {
         collect: monitor => ({
             isOver: !!monitor.isOver(),
         }),
-    }), [props.game, props.position, props.players])
+    }), [props.game, props.position, props.players, props.currentPlayer])
 
     return (
         <div ref={drop} className={"game-cell-div"}>

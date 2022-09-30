@@ -8,6 +8,7 @@ interface GameCellProps {
     game: IGame,
     cell: IGameCell,
     players: IPlayer[],
+    currentPlayer: IPlayer,
     children?: React.ReactNode,
     canMove: (position: number) => boolean,
     moveIcon: (position: number) => void
@@ -30,7 +31,7 @@ function GameCell(props: GameCellProps) {
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
         }),
-    }), [props.game, props.cell, props.players])
+    }), [props.game, props.cell, props.players, props.currentPlayer])
 
     return (
         <div ref={drop} className={"game-cell-div"}>

@@ -4,6 +4,5 @@ export interface IGameCell {
     isGray: boolean,
     isShared: boolean,
     color: string,
-    content?: string,
-    isAvailable: boolean
+    content?: string
 }

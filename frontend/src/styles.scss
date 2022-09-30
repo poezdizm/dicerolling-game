@@ -62,6 +62,7 @@
         align-items: center;
         display: grid;
         width: 30%;
+        margin-right: 10px;
 
         .player-progress-label {
           font-size: 12px;
@@ -70,8 +71,16 @@
       }
 
       .player-roll {
+        align-self: end;
+        align-items: center;
+        display: grid;
         width: 10%;
       }
+    }
+
+    .dice-container {
+      position: absolute;
+      bottom: 15%;
     }
   }
 

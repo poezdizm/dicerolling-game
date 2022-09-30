@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.dicerollinggame.model.game.GameModel;
 import ru.poezdizm.dicerollinggame.model.game.GameSimplifiedModel;
+import ru.poezdizm.dicerollinggame.model.game.RollRequest;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.GameService;
 
@@ -37,5 +38,11 @@ public class GameRestController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/roll")
+    public ResponseEntity<MessageResponse> saveRoll(@RequestBody RollRequest request, Principal principal) {
+        gameService.saveRoll(request, principal.getName());
+        return ResponseEntity.ok().body(new MessageResponse("Roll was saved successfully"));
     }
 }

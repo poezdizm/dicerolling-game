@@ -1,0 +1,1 @@
+alter table roll_history drop column username;

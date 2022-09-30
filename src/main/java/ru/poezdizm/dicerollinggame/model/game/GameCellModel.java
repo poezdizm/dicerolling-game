@@ -15,5 +15,4 @@ public class GameCellModel {
     private Boolean isShared;
     private String color;
     private String content;
-    private Boolean isAvailable;
 }

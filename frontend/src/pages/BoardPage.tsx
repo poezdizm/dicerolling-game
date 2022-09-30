@@ -13,6 +13,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import GameCellDummy from "../components/board/GameCellDummy";
 import {useSubscription} from "react-stomp-hooks";
 import {authHeaderStomp} from "../service/hooks/auth-header-stomp";
+import Dice from "react-dice-roll";
 
 function BoardPage() {
 
@@ -35,7 +36,7 @@ function BoardPage() {
     const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(
         {"username": loggedInUser.username.toString(), "position": 0})
 
-    useSubscription("/topic/game-message-" + loggedInUser.username,
+    useSubscription("/topic/game-message-" + loggedInUser.username + "-game-" + game.id,
         (message) => setGameFromMessage(message.body),
         authHeaderStomp());
 
@@ -44,7 +45,6 @@ function BoardPage() {
     }
 
     function setGameFromMessage(message: string) {
-        console.log(message)
         const parsed = JSON.parse(message);
         if (isGame(parsed)) {
             setGame(parsed)
@@ -64,9 +64,10 @@ function BoardPage() {
     }, [])
 
     useEffect(() => {
-        let columnNumber = 4;
+        console.log(game)
+        let columnNumber = 4
         if (game.cells.length === 1 || game.cells.length === 3) {
-            columnNumber = 3;
+            columnNumber = 3
         }
         if (game.cells.length > 4) {
             columnNumber += Math.floor((game.cells.length - 4) / 7)
@@ -80,7 +81,8 @@ function BoardPage() {
         setPlayers([])
         playerArray.forEach(player => {
             if (player.username === currentPlayer.username) {
-                setCurrentPlayer({"username": player.username, "position": player.position})
+                setCurrentPlayer({"username": player.username, "position": player.position,
+                    "lastRollValue": player.lastRollValue})
             }
             pushToPlayers(player)
         })
@@ -104,10 +106,21 @@ function BoardPage() {
         ))
     }
 
-    function canMovePlayer(newPosition: number): boolean {
-        return !!(newPosition === 0 || (game.isStarted &&
-            currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition));
+    function setRoll(value: number) {
+        GameService.sendRoll(game.id, value)
+            .then(() => {
+                setCurrentPlayer({...currentPlayer, "lastRollValue": value})
+                setPlayers(players.map(player => currentPlayer.username === player.username ?
+                    {...player, lastRollValue: value} :
+                    {...player}
+                ))
+            })
+    }
 
+    function canMovePlayer(newPosition: number): boolean {
+        console.log(currentPlayer.lastRollValue)
+        return !!(newPosition === 0 || (
+            currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition));
     }
 
     if (!isSignedIn) {
@@ -130,6 +143,9 @@ function BoardPage() {
                                     {players.map(player => <PlayerRow player={player}
                                                                       max={game.cells.length + 1}
                                                                       key={player.username}/>)}
+                                    <div className={"dice-container"}>
+                                        <Dice size={150} disabled={!game.isStarted} onRoll={value => setRoll(value)}/>
+                                    </div>
                                 </Row>
                             </Col>
                             <Col sm={9} className={"col-board board-col"}>
@@ -140,7 +156,7 @@ function BoardPage() {
                                     <div style={containerStyle} className={"board-container"}>
                                         <GameCellDummy position={0} className={"start-cell"}
                                                        game={game} players={players} moveIcon={movePlayer}
-                                                       canMove={canMovePlayer}
+                                                       canMove={canMovePlayer} currentPlayer={currentPlayer}
                                                        children={
                                                            players.map(player => player.position === 0 ?
                                                                <PlayerIcon player={player} currentPlayer={currentPlayer}
@@ -149,6 +165,7 @@ function BoardPage() {
                                         />
                                         {game.cells.map(cell =>
                                                 <GameCell cell={cell} players={players} game={game}
+                                                          currentPlayer={currentPlayer}
                                                           moveIcon={movePlayer} canMove={canMovePlayer}
                                                           children={
                                                               players.map(player => cell.position === player.position ?
@@ -159,7 +176,7 @@ function BoardPage() {
                                                           key={cell.position}/>)}
                                         <GameCellDummy position={game.cells.length + 1} className={"finish-cell"}
                                                        game={game} players={players} moveIcon={movePlayer}
-                                                       canMove={canMovePlayer}
+                                                       canMove={canMovePlayer} currentPlayer={currentPlayer}
                                                        children={
                                                            players.map(player => player.position === (game.cells.length + 1) ?
                                                                <PlayerIcon player={player} currentPlayer={currentPlayer}

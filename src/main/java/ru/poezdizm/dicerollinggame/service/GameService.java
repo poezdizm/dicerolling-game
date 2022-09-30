@@ -5,10 +5,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ru.poezdizm.dicerollinggame.entity.*;
 import ru.poezdizm.dicerollinggame.entity.game.*;
-import ru.poezdizm.dicerollinggame.model.game.GameCellModel;
-import ru.poezdizm.dicerollinggame.model.game.GameModel;
-import ru.poezdizm.dicerollinggame.model.game.GameSimplifiedModel;
-import ru.poezdizm.dicerollinggame.model.game.PlayerModel;
+import ru.poezdizm.dicerollinggame.model.game.*;
 import ru.poezdizm.dicerollinggame.repository.*;
 
 import java.util.*;
@@ -19,6 +16,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final GameSettingsRepository settingsRepository;
+    private final RollHistoryRepository rollHistoryRepository;
 
     private final UserRepository userRepository;
 
@@ -162,6 +160,27 @@ public class GameService {
         settingsRepository.delete(settings);
     }
 
+    public void saveRoll(RollRequest request, String username) throws IllegalArgumentException {
+        GameEntity game = gameRepository.findById(request.getGameId())
+                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User was not found"));
+        GameToPlayerEntity player = game.getGamePlayers().stream()
+                .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
+                .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
+
+        RollHistory roll = new RollHistory();
+        if (player.getLastRoll() != null) {
+            roll = player.getLastRoll();
+        }
+        roll.setPlayerAndGame(player);
+        roll.setRollValue(request.getValue());
+        RollHistory lastRoll = rollHistoryRepository.save(roll);
+        player.setLastRoll(lastRoll);
+
+        broadcastGame(mapGame(game, user), username);
+    }
+
     private static GameSimplifiedModel mapSimplifiedGame(GameEntity entity) {
         return GameSimplifiedModel.builder().id(entity.getId()).title(entity.getGameSettings().getTitle()).build();
     }
@@ -182,12 +201,8 @@ public class GameService {
 
         List<GameCellModel> gameCells = new ArrayList<>();
         for (GameCellEntity cell : board.getGameCells()) {
-            boolean isAvailable = false;
-            if (gameModel.getIsStarted() && player.getLastRoll() != null) {
-                isAvailable = (player.getPosition() + player.getLastRoll().getRollValue()) == cell.getPosition();
-            }
             boolean isReadable = player.getPosition() == cell.getPosition();
-            gameCells.add(mapGameCell(cell, isReadable, isAvailable));
+            gameCells.add(mapGameCell(cell, isReadable));
         }
         gameCells.sort(Comparator.comparing(GameCellModel::getPosition));
         gameModel.setCells(gameCells);
@@ -209,14 +224,14 @@ public class GameService {
         for (PlayerModel playerToSend : game.getPlayers()){
             String usernameToSend = playerToSend.getUsername();
             if (!Objects.equals(usernameToSend, usernameToExclude)) {
-                webSocket.convertAndSend("/topic/game-message-" + usernameToSend, game);
+                webSocket.convertAndSend("/topic/game-message-" + usernameToSend + "-game-" + game.getId(), game);
             }
         }
     }
 
-    private static GameCellModel mapGameCell(GameCellEntity entity, boolean isReadable, Boolean isAvailable) {
+    private static GameCellModel mapGameCell(GameCellEntity entity, boolean isReadable) {
         GameCellModel gameCell = GameCellModel.builder().id(entity.getId()).color(entity.getCell().getType().getColor())
-                .isAvailable(isAvailable).isGray(entity.getIsGray()).isShared(entity.getIsShared())
+                .isGray(entity.getIsGray()).isShared(entity.getIsShared())
                 .position(entity.getPosition()).build();
         if (isReadable) {
             gameCell.setContent(entity.getCell().getContent());
