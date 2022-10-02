@@ -7,5 +7,6 @@ export interface IGame {
     cells: IGameCell[],
     players: IPlayer[],
     isStarted: boolean,
-    playersMax: number
+    playersMax: number,
+    message?: string
 }

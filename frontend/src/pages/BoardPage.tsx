@@ -35,7 +35,7 @@ function BoardPage() {
 
     const [players, setPlayers] = useState<IPlayer[]>([])
     const [currentPlayer, setCurrentPlayer] = useState<IPlayer>(
-        {"username": loggedInUser.username.toString(), "position": 0})
+        {"username": loggedInUser.username.toString(), "position": 0, "landed": true})
 
     const [currentContent, setCurrentContent] = useState("")
 
@@ -67,7 +67,6 @@ function BoardPage() {
     }, [])
 
     useEffect(() => {
-        console.log(game)
         let columnNumber = 4
         if (game.cells.length === 1 || game.cells.length === 3) {
             columnNumber = 3
@@ -93,7 +92,7 @@ function BoardPage() {
             if (player.username === currentPlayer.username) {
                 setCurrentPlayer({
                     "username": player.username, "position": player.position,
-                    "lastRollValue": player.lastRollValue
+                    "lastRollValue": player.lastRollValue, "landed": player.landed
                 })
             }
             pushToPlayers(player)
@@ -101,7 +100,7 @@ function BoardPage() {
 
         if (playerArray.length < max) {
             for (let i = playerArray.length; i < max; i++) {
-                pushToPlayers({"username": i.toString(), "position": 0})
+                pushToPlayers({"username": i.toString(), "position": 0, "landed": true})
             }
         }
     }
@@ -119,22 +118,24 @@ function BoardPage() {
     function setRoll(value: number) {
         GameService.sendRoll(game.id, value)
             .then(() => {
-                setCurrentPlayer({...currentPlayer, "lastRollValue": value})
+                setCurrentPlayer({...currentPlayer, "lastRollValue": value, "landed": false})
                 setPlayers(players.map(player => currentPlayer.username === player.username ?
-                    {...player, lastRollValue: value} :
+                    {...player, lastRollValue: value, landed: false} :
                     {...player}
                 ))
             })
     }
 
     function canMovePlayer(newPosition: number): boolean {
-        return !!((currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition) ||
-            (game.cells.filter(cell => cell.position === currentPlayer.position && cell.isGray).length > 0 &&
-                (currentPlayer.position - 1) === newPosition));
+        let isGray = game.cells.filter(cell => cell.position === currentPlayer.position && cell.isGray).length > 0
+        return !!((isGray || !currentPlayer.landed) &&
+            ((currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) === newPosition) ||
+                (isGray && (currentPlayer.position - 1) === newPosition)));
     }
 
     function canMoveToFinish(newPosition: number): boolean {
-        return !!(currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) >= newPosition);
+        return !!(!currentPlayer.landed &&
+            (currentPlayer.lastRollValue && (currentPlayer.lastRollValue + currentPlayer.position) >= newPosition));
     }
 
     if (!isSignedIn) {
@@ -158,7 +159,10 @@ function BoardPage() {
                                                                       max={game.cells.length + 1}
                                                                       key={player.username}/>)}
                                     <div className={"dice-container"}>
-                                        <Dice size={150} disabled={!game.isStarted} onRoll={value => setRoll(value)}/>
+                                        {(game.isStarted && currentPlayer.landed) &&
+                                            <Dice size={150} disabled={!game.isStarted || !currentPlayer.landed}
+                                                  onRoll={value => setRoll(value)}/>
+                                        }
                                     </div>
                                 </Row>
                             </Col>
@@ -200,9 +204,14 @@ function BoardPage() {
                                     </div>
                                 </Row>
                                 <Row className={"board-row board-card-row"}>
-                                    {currentContent &&
+                                    {!game.message && currentContent &&
                                         <Card className={"content-card"}>
                                             <p>{currentContent}</p>
+                                        </Card>
+                                    }
+                                    {game.message &&
+                                        <Card className={"content-card"}>
+                                            <p>{game.message}</p>
                                         </Card>
                                     }
                                 </Row>

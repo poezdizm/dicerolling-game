@@ -17,4 +17,5 @@ public class GameModel {
     private List<PlayerModel> players;
     private Boolean isStarted;
     private Integer playersMax;
+    private String message;
 }

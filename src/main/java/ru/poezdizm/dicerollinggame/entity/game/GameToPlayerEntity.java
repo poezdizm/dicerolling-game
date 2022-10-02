@@ -21,6 +21,8 @@ public class GameToPlayerEntity {
     private Long id;
     @Column(name = "position_num")
     private Integer position;
+    @Column(name = "landed")
+    private Boolean isLanded;
 
     @ManyToOne
     @JoinColumn(name = "game_id")

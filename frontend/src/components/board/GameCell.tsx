@@ -38,8 +38,9 @@ function GameCell(props: GameCellProps) {
             <div style={gapStyle} className={"cell-gap"}></div>
             <div style={cellStyle} className={"game-cell"}>
                 <p className={"cell-position"}>{props.cell.position}</p>
-                {!isOver && canDrop && <p style={{color: "black"}}>Available</p>}
-                {isOver && !canDrop && <p style={{color: "black"}}>No</p>}
+                {isOver && canDrop && <div className={"cell-available"}></div>}
+                {!isOver && canDrop && <div className={"cell-available-on"}></div>}
+                {isOver && !canDrop && <div className={"cell-unavailable"}></div>}
                 {props.children}
             </div>
         </div>

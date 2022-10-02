@@ -1,0 +1,1 @@
+alter table game_to_player add column landed boolean not null default true;

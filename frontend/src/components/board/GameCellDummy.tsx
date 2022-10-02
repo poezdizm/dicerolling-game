@@ -16,12 +16,13 @@ interface GameCellProps {
 
 function GameCellDummy(props: GameCellProps) {
 
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: 'PlayerIcon',
         drop: () => props.moveIcon(props.position),
         canDrop: () => props.canMove(props.position),
         collect: monitor => ({
             isOver: !!monitor.isOver(),
+            canDrop: !!monitor.canDrop()
         }),
     }), [props.game, props.position, props.players, props.currentPlayer])
 
@@ -29,6 +30,9 @@ function GameCellDummy(props: GameCellProps) {
         <div ref={drop} className={"game-cell-div"}>
             <div className={"cell-gap"}></div>
             <div className={"game-cell " + props.className}>
+                {isOver && canDrop && <div className={"cell-available"}></div>}
+                {!isOver && canDrop && <div className={"cell-available-on"}></div>}
+                {isOver && !canDrop && <div className={"cell-unavailable"}></div>}
                 {props.children}
             </div>
         </div>

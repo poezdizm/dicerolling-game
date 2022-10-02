@@ -13,4 +13,5 @@ public class PlayerModel {
     private String username;
     private Integer position;
     private Integer lastRollValue;
+    private Boolean landed;
 }

@@ -55,6 +55,7 @@ public class GameService {
         player.setGame(game);
         player.setPlayer(user);
         player.setPosition(0);
+        player.setIsLanded(true);
         game.getGamePlayers().add(player);
 
         if (!game.getGameSettings().getIsShared()) {
@@ -75,6 +76,9 @@ public class GameService {
         GameEntity game = new GameEntity();
         game.setGameSettings(settings);
         game.setIsStarted(false);
+        if (settings.getPlayersNumber() == 1) {
+            game.setIsStarted(true);
+        }
 
         Random random = new Random(settings.getSeed());
 
@@ -82,6 +86,7 @@ public class GameService {
         player.setGame(game);
         player.setPlayer(settings.getOwner());
         player.setPosition(0);
+        player.setIsLanded(true);
         game.setGamePlayers(List.of(player));
 
         List<GameBoardEntity> boards = new LinkedList<>();
@@ -175,6 +180,8 @@ public class GameService {
         roll.setRollValue(request.getValue());
         RollHistory lastRoll = rollHistoryRepository.save(roll);
         player.setLastRoll(lastRoll);
+        player.setIsLanded(false);
+        playerRepository.save(player);
 
         broadcastGame(game, username);
     }
@@ -191,7 +198,13 @@ public class GameService {
                 (request.getValue() == (game.getGameSettings().getMaxCellNumber() + 1) &&
                         (player.getPosition() + player.getLastRoll().getRollValue()) > request.getValue()))) {
             player.setPosition(request.getValue());
+            player.setIsLanded(true);
             playerRepository.save(player);
+            if ((request.getValue() == (game.getGameSettings().getMaxCellNumber() + 1) &&
+                    (player.getPosition() + player.getLastRoll().getRollValue()) > request.getValue())) {
+                game.setIsStarted(false);
+                gameRepository.save(game);
+            }
 
             broadcastGame(game, username);
         } else {
@@ -203,6 +216,7 @@ public class GameService {
                     Objects.equals(cell.getPosition(), player.getPosition()) && cell.getIsGray()) &&
                     (player.getPosition() - 1) == request.getValue()) {
                 player.setPosition(request.getValue());
+                player.setIsLanded(true);
                 playerRepository.save(player);
 
                 broadcastGame(game, username);
@@ -222,7 +236,7 @@ public class GameService {
                 .playersMax(game.getGameSettings().getPlayersNumber())
                 .isStarted(game.getIsStarted()).build();
 
-        GameBoardEntity board = game.getGameSettings().getIsShared() ?  game.getGameBoards().get(0) :
+        GameBoardEntity board = game.getGameSettings().getIsShared() ? game.getGameBoards().get(0) :
                 game.getGameBoards().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), currentPlayer.getUsername())).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
@@ -238,12 +252,25 @@ public class GameService {
         gameCells.sort(Comparator.comparing(GameCellModel::getPosition));
         gameModel.setCells(gameCells);
 
+        if (!gameModel.getIsStarted()) {
+            if (gameModel.getPlayersMax() == gameModel.getPlayers().size()) {
+                String winner = gameModel.getPlayers().stream()
+                        .filter(playerModel -> playerModel.getPosition() == game.getGameSettings().getMaxCellNumber() + 1)
+                        .findFirst().get().getUsername();
+                gameModel.setMessage("Game is over. " + winner + " won.");
+            } else {
+                gameModel.setMessage("Game hasn't started yet");
+            }
+        } else {
+            gameModel.setMessage(null);
+        }
+
         return gameModel;
     }
 
     private static PlayerModel mapPlayer(GameToPlayerEntity entity) {
         PlayerModel player = PlayerModel.builder().id(entity.getId()).position(entity.getPosition())
-                .username(entity.getPlayer().getUsername()).build();
+                .username(entity.getPlayer().getUsername()).landed(entity.getIsLanded()).build();
         if (entity.getLastRoll() != null) {
             player.setLastRollValue(entity.getLastRoll().getRollValue());
         }
