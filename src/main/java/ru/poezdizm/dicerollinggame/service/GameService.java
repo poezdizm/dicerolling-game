@@ -22,6 +22,7 @@ public class GameService {
     private final UserRepository userRepository;
 
     private final CellService cellService;
+    private final UserStatsService userStatsService;
 
     private final SimpMessagingTemplate webSocket;
 
@@ -187,6 +188,8 @@ public class GameService {
         player.setIsLanded(false);
         playerRepository.save(player);
 
+        userStatsService.addRoll(username);
+
         broadcastGame(game, username);
     }
 
@@ -196,6 +199,14 @@ public class GameService {
         GameToPlayerEntity player = game.getGamePlayers().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
+        GameBoardEntity board = game.getGameSettings().getIsShared() ?  game.getGameBoards().get(0) :
+                game.getGameBoards().stream()
+                        .filter(it -> Objects.equals(it.getPlayer().getUsername(), player.getPlayer().getUsername())).findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
+        if (board.getGameCells().stream().anyMatch(cell ->
+                Objects.equals(cell.getPosition(), player.getPosition() ) && cell.getIsGray())) {
+            userStatsService.addGrayCells(username);
+        }
 
         if (player.getLastRoll() != null &&
                 ((player.getPosition() + player.getLastRoll().getRollValue()) == request.getValue() ||
@@ -208,14 +219,12 @@ public class GameService {
                     (player.getPosition() + player.getLastRoll().getRollValue()) > request.getValue())) {
                 game.setIsStarted(false);
                 gameRepository.save(game);
+
+                userStatsService.addGamesWon(username);
             }
 
             broadcastGame(game, username);
         } else {
-            GameBoardEntity board = game.getGameSettings().getIsShared() ?  game.getGameBoards().get(0) :
-                    game.getGameBoards().stream()
-                            .filter(it -> Objects.equals(it.getPlayer().getUsername(), player.getPlayer().getUsername())).findFirst()
-                            .orElseThrow(() -> new IllegalArgumentException("Game has no boards"));
             if (board.getGameCells().stream().anyMatch(cell ->
                     Objects.equals(cell.getPosition(), player.getPosition()) && cell.getIsGray()) &&
                     (player.getPosition() - 1) == request.getValue()) {

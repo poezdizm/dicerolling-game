@@ -253,6 +253,22 @@
 
 .main-card {
   height: 600px !important;
+
+  &.stats-card {
+    color: black;
+
+    .stats-body {
+      text-align: left;
+
+      .stats-label {
+        font-size: 20px;
+
+        .stats-label-b {
+          font-weight: 300;
+        }
+      }
+    }
+  }
 }
 
 .login-card {
@@ -351,6 +367,12 @@
   color: black;
   margin-top: 5px !important;
   height: 100%;
+}
+
+.stats-heading {
+  color: black;
+  margin-top: 5px !important;
+  margin-bottom: 25px !important;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

@@ -9,7 +9,6 @@ import ru.poezdizm.dicerollinggame.model.UserModel;
 import ru.poezdizm.dicerollinggame.repository.UserRepository;
 
 import java.util.Collections;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +16,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
+
+    private final UserStatsService statsService;
 
     public UserEntity getUser(String username) {
         return userRepository.findByUsername(username).orElse(null);
@@ -36,7 +37,10 @@ public class UserService {
 
         userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
 
-        userRepository.save(userEntity);
+        userEntity = userRepository.save(userEntity);
+
+        statsService.createStats(userEntity);
+
         return true;
     }
 

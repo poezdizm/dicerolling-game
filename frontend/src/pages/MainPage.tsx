@@ -7,6 +7,7 @@ import {IGameSimplified} from "../models/game/IGameSimplified";
 import GameService from "../service/game-service";
 import {Link} from "react-router-dom";
 import Utils from "../service/utils";
+import {useStats} from "../service/hooks/use-stats";
 
 export function MainPage() {
 
@@ -14,6 +15,8 @@ export function MainPage() {
 
     const isSignedIn = AuthService.isSignedIn()
     const {games} = useGames()
+
+    const {stats} = useStats()
 
     useEffect(() => {
         adjustListPadding()
@@ -61,7 +64,7 @@ export function MainPage() {
                             <Container className="basic-container">
                                 <Row>
                                     <Col sm={1} />
-                                    <Col sm={7}>
+                                    <Col sm={6}>
                                         <Card className="main-card">
                                             <Card.Header>
                                                 <h2 className={"ng-heading"}>My games</h2>
@@ -84,7 +87,27 @@ export function MainPage() {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col sm={4} />
+                                    <Col sm={1} />
+                                    <Col sm={3}>
+                                        <Card className="main-card stats-card">
+                                            <Card.Header>
+                                                <h2 className={"ng-heading"}>Player stats</h2>
+                                            </Card.Header>
+                                            <Card.Body className={"stats-body"}>
+                                                <h4 className={"stats-heading"}>{stats.username}</h4>
+                                                <p className={"stats-label"}>
+                                                    <span className={"stats-label-b"}>Games won: </span>{stats.gamesWon}
+                                                </p>
+                                                <p className={"stats-label"}>
+                                                    <span className={"stats-label-b"}>Total number of rolls: </span>{stats.totalRolls}
+                                                </p>
+                                                <p className={"stats-label"}>
+                                                    <span className={"stats-label-b"}>Gray cells visited: </span>{stats.grayCells}
+                                                </p>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col sm={1} />
                                 </Row>
                             </Container>
                             <Toast className={"basic-toast"} onClose={() => setShow(false)}
