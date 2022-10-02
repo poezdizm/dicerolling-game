@@ -63,6 +63,10 @@ public class GameService {
             GameBoardEntity board = boards.stream().findAny()
                     .orElseThrow(() -> new IllegalArgumentException("Game has no more space for players"));
             board.setPlayer(user);
+        } else {
+            if (game.getGameSettings().getPlayersNumber() == game.getGamePlayers().size()) {
+                throw new IllegalArgumentException("Game has no more space for players");
+            }
         }
 
         if (game.getGamePlayers().size() == game.getGameSettings().getPlayersNumber()) {
