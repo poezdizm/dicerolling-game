@@ -27,10 +27,6 @@ public class UserService {
                 getUser(registrationModel.getUsername()) != null) {
             return false;
         }
-        if (userRepository.findAll().stream()
-                .filter(user -> Objects.equals(user.getUsername(), registrationModel.getUsername())).toList().isEmpty()) {
-            return false;
-        }
 
         UserEntity userEntity = new UserEntity();
 

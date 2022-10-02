@@ -154,6 +154,40 @@
     }
   }
 }
+.logo-container {
+  margin-top: 7%;
+
+  .game-logo {
+    content: url('../public/game-logo.png');
+  }
+
+  .first-card {
+    color: black;
+    margin-top: 40px;
+  }
+
+  .animation {
+    position: relative;
+    animation: animation 2s ease-out;
+  }
+
+  #slide-in {
+    text-align: center;
+    color: #fff;
+  }
+
+  @keyframes animation {
+    0% {
+      opacity: 0;
+      bottom: -100px;
+    }
+
+    100% {
+      opacity: 1;
+      bottom: 0;
+    }
+  }
+}
 
 .player-icon {
   display: inline-table;
@@ -219,6 +253,22 @@
 
 .main-card {
   height: 600px !important;
+}
+
+.login-card {
+  color: black;
+
+  .login-label {
+    float: left;
+    font-size: 24px;
+  }
+
+  .login-error {
+    margin-top:10px;
+    margin-bottom:5px;
+    font-size: 20px;
+    color: red;
+  }
 }
 
 .cell-list {
@@ -294,6 +344,7 @@
 
 .main-link {
   color: #6f74ff;
+  text-decoration-line: none;
 }
 
 .ng-heading {

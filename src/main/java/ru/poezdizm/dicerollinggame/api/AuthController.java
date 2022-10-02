@@ -55,7 +55,10 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody UserModel registrationModel) {
-        userService.registerUser(registrationModel);
+        boolean success = userService.registerUser(registrationModel);
+        if (!success) {
+            return ResponseEntity.badRequest().body(new MessageResponse("User was not registered"));
+        }
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

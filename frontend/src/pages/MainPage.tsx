@@ -1,5 +1,4 @@
 import React, {createRef, useEffect, useState} from "react";
-import logo from "../logo.svg";
 import AuthService from "../service/auth-service";
 import {Col, Container, Row, Card, Toast, ListGroup} from "react-bootstrap";
 import {useGames} from "../service/hooks/use-games";
@@ -47,9 +46,17 @@ export function MainPage() {
     return (
         <>
             <div className="App">
-                <header className="App-header">
+                <header className="App-header" style={!isSignedIn ? {justifyContent: "start"} : {}}>
                     {!isSignedIn ?
-                        <img src={logo} className="App-logo" alt="logo"/> :
+                        <div className={"logo-container"}>
+                            <img className="game-logo animation"/>
+                            <Card className="first-card animation">
+                                <Card.Body>
+                                    <Link to={"/login"} className={"main-link"}>Sign in </Link>
+                                    or <Link to={"/reg"} className={"main-link"}>sign up</Link> to start playing
+                                </Card.Body>
+                            </Card>
+                        </div> :
                         <>
                             <Container className="basic-container">
                                 <Row>
