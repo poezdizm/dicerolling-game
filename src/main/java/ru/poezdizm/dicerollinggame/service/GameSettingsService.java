@@ -69,6 +69,13 @@ public class GameSettingsService {
             throw new ValidationException("Cell types number sum (" + sttNumber + ") cannot be greater than " +
                     "max cell number (" + maxCellNumber + ")");
         }
+        for (SettingsToTypeModel type : model.getTypeValues()) {
+            Long count = cellService.countCellsByTypeId(type.getType().getId());
+            if (count < type.getValue()) {
+                throw new ValidationException("Cell type " + type.getType().getLabel() + " number (" + type.getValue() + ") " +
+                        "cannot be greater than number of cells of this type in pool (" + count + ")");
+            }
+        }
 
         return userRepository.findByUsername(model.getOwner().getUsername())
                 .orElseThrow(() -> new ValidationException("User was not found"));

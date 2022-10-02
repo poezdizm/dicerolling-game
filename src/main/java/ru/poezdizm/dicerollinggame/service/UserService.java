@@ -9,6 +9,7 @@ import ru.poezdizm.dicerollinggame.model.UserModel;
 import ru.poezdizm.dicerollinggame.repository.UserRepository;
 
 import java.util.Collections;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,10 @@ public class UserService {
     public boolean registerUser(UserModel registrationModel) {
         if (registrationModel.getUsername().isBlank() || registrationModel.getPassword().isBlank() ||
                 getUser(registrationModel.getUsername()) != null) {
+            return false;
+        }
+        if (userRepository.findAll().stream()
+                .filter(user -> Objects.equals(user.getUsername(), registrationModel.getUsername())).toList().isEmpty()) {
             return false;
         }
 

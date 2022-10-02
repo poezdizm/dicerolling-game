@@ -254,10 +254,10 @@ public class GameService {
 
         if (!gameModel.getIsStarted()) {
             if (gameModel.getPlayersMax() == gameModel.getPlayers().size()) {
-                String winner = gameModel.getPlayers().stream()
+                Optional<PlayerModel> winner = gameModel.getPlayers().stream()
                         .filter(playerModel -> playerModel.getPosition() == game.getGameSettings().getMaxCellNumber() + 1)
-                        .findFirst().get().getUsername();
-                gameModel.setMessage("Game is over. " + winner + " won.");
+                        .findFirst();
+                winner.ifPresent(playerModel -> gameModel.setMessage("Game is over. " + playerModel.getUsername() + " won."));
             } else {
                 gameModel.setMessage("Game hasn't started yet");
             }

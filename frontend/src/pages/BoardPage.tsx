@@ -159,10 +159,8 @@ function BoardPage() {
                                                                       max={game.cells.length + 1}
                                                                       key={player.username}/>)}
                                     <div className={"dice-container"}>
-                                        {(game.isStarted && currentPlayer.landed) &&
-                                            <Dice size={150} disabled={!game.isStarted || !currentPlayer.landed}
-                                                  onRoll={value => setRoll(value)}/>
-                                        }
+                                        <Dice size={150} disabled={!game.isStarted || !currentPlayer.landed}
+                                              onRoll={value => setRoll(value)}/>
                                     </div>
                                 </Row>
                             </Col>
