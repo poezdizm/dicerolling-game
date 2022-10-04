@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.poezdizm.dicerollinggame.exception.ValidationException;
 import ru.poezdizm.dicerollinggame.model.CellModel;
+import ru.poezdizm.dicerollinggame.model.CellPackModel;
 import ru.poezdizm.dicerollinggame.model.CellTypeModel;
 import ru.poezdizm.dicerollinggame.model.response.MessageResponse;
 import ru.poezdizm.dicerollinggame.service.CellService;
@@ -20,8 +21,8 @@ public class CellRestController {
     private final CellService cellService;
 
     @GetMapping
-    public List<CellModel> getCells() {
-        return cellService.getAllCells();
+    public List<CellModel> getCells(@RequestParam("pack") Integer packId) {
+        return cellService.getAllCells(packId);
     }
 
     @GetMapping("/count")
@@ -34,6 +35,11 @@ public class CellRestController {
         return cellService.getAllCellTypes();
     }
 
+    @GetMapping("/packs")
+    public List<CellPackModel> getCellPacks() {
+        return cellService.getAllCellPacks();
+    }
+
     @GetMapping("/{id}")
     public CellModel geCellById(@PathVariable Long id) {
         return cellService.getCellById(id);
@@ -42,6 +48,11 @@ public class CellRestController {
     @PostMapping
     public ResponseEntity<CellModel> saveCell(@RequestBody CellModel cellModel) throws ValidationException {
         return ResponseEntity.ok().body(cellService.save(cellModel));
+    }
+
+    @PostMapping("/packs")
+    public ResponseEntity<CellPackModel> savePack(@RequestBody CellPackModel pack) {
+        return ResponseEntity.ok().body(cellService.savePack(pack));
     }
 
     @DeleteMapping("/{id}")

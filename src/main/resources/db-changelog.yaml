@@ -27,3 +27,5 @@ databaseChangeLog:
       file: classpath*:changelog/V13__021022_add_landed_to_player.sql
   - include:
       file: classpath*:changelog/V14__021022_add_user_stat_table.sql
+  - include:
+      file: classpath*:changelog/V15__031022_create_cell_pack_table.sql

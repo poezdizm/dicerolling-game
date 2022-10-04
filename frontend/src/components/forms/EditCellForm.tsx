@@ -4,10 +4,12 @@ import {Button, Form} from "react-bootstrap";
 import {ICellType} from "../../models/ICellType";
 import CellTypeSelectItem from "../CellTypeSelectItem";
 import CellService from "../../service/cell-service";
+import {ICellPack} from "../../models/ICellPack";
 
 interface ECFormProps {
     cell: ICell,
     cellTypes: ICellType[],
+    currentPack: ICellPack,
     onHide?: () => void
 }
 
@@ -18,7 +20,8 @@ function EditCellForm(props: ECFormProps) {
     const [errorMsg, setErrorMsg] = useState("");
 
     function handleAdd() {
-        CellService.saveCell({"id": props.cell.id, "content": content?.trim(), "type": {"id": type}})
+        CellService.saveCell({"id": props.cell.id, "content": content?.trim(),
+            "type": {"id": type}, "packId": props.currentPack.id})
             .then(response => {
                 if (response.status === 200) {
                     if (props.onHide) {

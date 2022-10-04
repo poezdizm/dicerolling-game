@@ -12,4 +12,5 @@ public class CellModel {
     private Long id;
     private String content;
     private CellTypeModel type;
+    private Integer packId;
 }

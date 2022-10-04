@@ -294,6 +294,25 @@
   overflow-x: hidden;
 }
 
+.cell-pack-card {
+  height: 400px !important;
+
+  .cell-pack-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid gray;
+
+    .cell-pack-label {
+      color: black;
+      font-size: 20px;
+    }
+  }
+}
+
 .list-item {
   max-height: 45px;
   font-size: 20px;

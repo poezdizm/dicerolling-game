@@ -22,6 +22,7 @@ public class GameSettingsService {
     private final UserRepository userRepository;
     private final CellService cellService;
     private final SettingsToTypeRepository settingsToTypeRepository;
+    private final CellPackRepository cellPackRepository;
 
     private final GameService gameService;
 
@@ -40,6 +41,8 @@ public class GameSettingsService {
         entity.setPlayersNumber(model.getPlayersNumber());
         entity.setOwner(owner);
         entity.setSeed(stringToSeed(model.getSeed()));
+        entity.setPack(cellPackRepository.findById(model.getPackId())
+                .orElseThrow(() -> new ValidationException("Pack not found")));
 
         List<SettingsToTypeEntity> settingsToTypeList = new ArrayList<>();
         for (SettingsToTypeModel sttModel : model.getTypeValues()) {

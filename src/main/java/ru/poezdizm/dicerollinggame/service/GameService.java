@@ -65,12 +65,12 @@ public class GameService {
                     .orElseThrow(() -> new IllegalArgumentException("Game has no more space for players"));
             board.setPlayer(user);
         } else {
-            if (game.getGameSettings().getPlayersNumber() == game.getGamePlayers().size()) {
+            if (game.getGameSettings().getPlayersNumber() < game.getGamePlayers().size()) {
                 throw new IllegalArgumentException("Game has no more space for players");
             }
         }
 
-        if (game.getGamePlayers().size() == game.getGameSettings().getPlayersNumber()) {
+        if (game.getGameSettings().getPlayersNumber() == game.getGamePlayers().size()) {
             game.setIsStarted(true);
         }
 
@@ -128,7 +128,8 @@ public class GameService {
             grayZoneEnd = grayZoneStart + settings.getGrayZoneNumber() - 1;
         }
 
-        ArrayList<CellEntity> randomCells = cellService.getRandomCellList(random, settings.getTypeValues());
+        ArrayList<CellEntity> randomCells = cellService.getRandomCellList(random, settings.getTypeValues(),
+                settings.getPack().getId());
         if (sharedCell != null && randomCells.contains(sharedCell.getCell())) {
             CellEntity cellBuffer = randomCells.get(sharedCell.getPosition() - 1);
             randomCells.set(randomCells.indexOf(sharedCell.getCell()), cellBuffer);

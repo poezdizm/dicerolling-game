@@ -19,8 +19,25 @@ function GameListItem(props: GameListItemProps) {
         setBaseUrl(window.location.protocol + "//" + window.location.host)
     }, [])
 
+    function copyToClipboard(textToCopy: string) {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy);
+        } else {
+            let textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed"
+            textArea.style.left = "-999999px"
+            textArea.style.top = "-999999px"
+            document.body.appendChild(textArea)
+            textArea.focus()
+            textArea.select()
+            document.execCommand('copy');
+            textArea.remove()
+        }
+    }
+
     function copyLink() {
-        navigator.clipboard.writeText(baseUrl + "/game?id=" + props.game.id)
+        copyToClipboard(baseUrl + "/game?id=" + props.game.id)
         props.showToast()
     }
 

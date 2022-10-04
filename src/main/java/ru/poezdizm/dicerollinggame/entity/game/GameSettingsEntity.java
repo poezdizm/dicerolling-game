@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.poezdizm.dicerollinggame.entity.CellPackEntity;
 import ru.poezdizm.dicerollinggame.entity.UserEntity;
 
 import javax.persistence.*;
@@ -43,4 +44,8 @@ public class GameSettingsEntity {
 
     @OneToMany(mappedBy = "settings", cascade=CascadeType.ALL)
     private List<SettingsToTypeEntity> typeValues;
+
+    @OneToOne
+    @JoinColumn(name="pack_id", nullable=false)
+    private CellPackEntity pack;
 }

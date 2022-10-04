@@ -1,19 +1,20 @@
 import http from "../http-common";
 import {ICell} from "../models/ICell";
 import {authHeader} from "./hooks/auth-header";
+import {ICellPack} from "../models/ICellPack";
 
 const saveCell = (cell: ICell) => {
     return http.post("/cells", cell, {headers: authHeader()})
         .then(response => {
-            return response;
+            return response
         })
         .catch(function (error) {
             return error.response.data.message
-        });
+        })
 }
 
-const getCells = () => {
-    return http.get('/cells', {headers: authHeader()})
+const getCells = (packId: number) => {
+    return http.get('/cells?pack=' + packId, {headers: authHeader()})
         .then(response => {return response.data})
 }
 
@@ -32,12 +33,29 @@ const getCellCount = () => {
         .then(response => {return response.data})
 }
 
+const getCellPacks = () => {
+    return http.get('/cells/packs', {headers: authHeader()})
+        .then(response => {return response.data})
+}
+
+const savePack = (pack: ICellPack) => {
+    return http.post('/cells/packs', pack, {headers: authHeader()})
+        .then(response => {
+            return response
+        })
+        .catch(function (error) {
+            return error.response.data.message
+        })
+}
+
 const CellService = {
     getCells,
     saveCell,
     deleteCell,
     getCellTypes,
-    getCellCount
+    getCellCount,
+    getCellPacks,
+    savePack
 };
 
 export default CellService;

@@ -18,7 +18,7 @@ function NewGamePage() {
     const [cellMax, setCellMax] = useState(10)
 
     const [created, setCreated] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("")
 
     const [title, setTitle] = useState("My new game")
     const [titleValid, setTitleValid] = useState(true)

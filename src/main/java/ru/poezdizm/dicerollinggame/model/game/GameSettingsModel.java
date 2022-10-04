@@ -21,4 +21,5 @@ public class GameSettingsModel {
     private UserModel owner;
     private List<SettingsToTypeModel> typeValues;
     private String seed;
+    private Integer packId;
 }

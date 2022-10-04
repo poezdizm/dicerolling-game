@@ -24,7 +24,12 @@ public class CellEntity {
     private Timestamp timeOfCreation;
 
     @ManyToOne
+    @JoinColumn(name = "type_id")
     private CellTypeEntity type;
+
+    @ManyToOne
+    @JoinColumn(name = "pack_id")
+    private CellPackEntity pack;
 
     @Override
     public boolean equals(Object o) {
