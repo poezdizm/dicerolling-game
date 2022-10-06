@@ -26,8 +26,8 @@ public class CellRestController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> getCellCount() {
-        return ResponseEntity.ok().body(cellService.countCells());
+    public ResponseEntity<Long> getCellCount(@RequestParam("pack") Integer packId) {
+        return ResponseEntity.ok().body(cellService.countCells(packId));
     }
 
     @GetMapping("/types")

@@ -9,5 +9,6 @@ export interface ISettings {
     hasSharedCell: boolean,
     playersNumber: number
     owner: IUser,
-    typeValues: ITypeValue[]
+    typeValues: ITypeValue[],
+    packId: number
 }

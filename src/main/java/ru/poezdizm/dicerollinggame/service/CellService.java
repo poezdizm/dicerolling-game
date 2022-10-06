@@ -48,12 +48,12 @@ public class CellService {
         return cellPackRepository.findAll().stream().map(CellService::mapPack).toList();
     }
 
-    public long countCells() {
-        return cellRepository.count();
+    public long countCells(Integer packId) {
+        return cellRepository.countAllByPack_Id(packId);
     }
 
-    public long countCellsByTypeId(Integer typeId) {
-        return cellRepository.countAllByType_Id(typeId);
+    public long countCellsByTypeId(Integer typeId, Integer packId) {
+        return cellRepository.countAllByType_IdAndPack_Id(typeId, packId);
     }
 
     public CellModel getCellById(Long id) {
@@ -148,7 +148,7 @@ public class CellService {
 
         for (SettingsToTypeEntity typeValue: typeValues) {
             List<CellEntity> allCells = cellRepository.findAllByType_IdAndPack_Id(typeValue.getType().getId(), packId);
-            Long count = countCellsByTypeId(typeValue.getType().getId());
+            Long count = countCellsByTypeId(typeValue.getType().getId(), packId);
             int numberOfElements = typeValue.getValue() > count ? count.intValue() : typeValue.getValue();
 
             for (int i = 0; i < numberOfElements; i++) {

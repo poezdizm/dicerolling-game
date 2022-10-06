@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ICell} from "../../models/ICell";
 import {Button, Form} from "react-bootstrap";
 import {ICellType} from "../../models/ICellType";
-import CellTypeSelectItem from "../CellTypeSelectItem";
+import CellTypeSelectItem from "./CellTypeSelectItem";
 import CellService from "../../service/cell-service";
 import {ICellPack} from "../../models/ICellPack";
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ICellType} from "../models/ICellType";
+import {ICellType} from "../../models/ICellType";
 
 interface CTSProps {
     cellType: ICellType

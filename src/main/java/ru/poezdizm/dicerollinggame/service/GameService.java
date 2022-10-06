@@ -124,7 +124,11 @@ public class GameService {
         int grayZoneStart = 0;
         int grayZoneEnd = 0;
         if (settings.getGrayZoneNumber() > 0) {
-            grayZoneStart = 1 + random.nextInt(settings.getMaxCellNumber() - settings.getGrayZoneNumber());
+            if (Objects.equals(settings.getMaxCellNumber(), settings.getGrayZoneNumber())) {
+                grayZoneStart = 1;
+            } else {
+                grayZoneStart = 1 + random.nextInt(settings.getMaxCellNumber() - settings.getGrayZoneNumber());
+            }
             grayZoneEnd = grayZoneStart + settings.getGrayZoneNumber() - 1;
         }
 

@@ -28,8 +28,8 @@ const getCellTypes = () => {
         .then(response => {return response.data})
 }
 
-const getCellCount = () => {
-    return http.get('/cells/count', {headers: authHeader()})
+const getCellCount = (pack: number) => {
+    return http.get('/cells/count?pack='+pack, {headers: authHeader()})
         .then(response => {return response.data})
 }
 

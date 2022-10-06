@@ -62,7 +62,7 @@ public class GameSettingsService {
             throw new ValidationException("Title cannot be empty");
         }
         Integer maxCellNumber = model.getMaxCellNumber();
-        long poolMax = cellService.countCells();
+        long poolMax = cellService.countCells(model.getPackId());
         if (maxCellNumber > poolMax) {
             throw new ValidationException("Max cell number (" + maxCellNumber + ") cannot be greater than " +
                     "number of cells in pool (" + poolMax + ")");
@@ -73,7 +73,7 @@ public class GameSettingsService {
                     "max cell number (" + maxCellNumber + ")");
         }
         for (SettingsToTypeModel type : model.getTypeValues()) {
-            Long count = cellService.countCellsByTypeId(type.getType().getId());
+            Long count = cellService.countCellsByTypeId(type.getType().getId(), model.getPackId());
             if (count < type.getValue()) {
                 throw new ValidationException("Cell type " + type.getType().getLabel() + " number (" + type.getValue() + ") " +
                         "cannot be greater than number of cells of this type in pool (" + count + ")");

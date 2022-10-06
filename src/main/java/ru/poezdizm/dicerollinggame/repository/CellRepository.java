@@ -18,6 +18,8 @@ public interface CellRepository extends JpaRepository<CellEntity, Long> {
 
     List<CellEntity> findAllByType_IdAndPack_Id(Integer typeId, Integer packId);
 
-    Long countAllByType_Id(Integer typeId);
+    Long countAllByType_IdAndPack_Id(Integer typeId, Integer packId);
+
+    Long countAllByPack_Id(Integer packId);
 
 }

@@ -11,6 +11,8 @@ import StringFormControl from "../components/forms/StringFormControl";
 import {ISettings} from "../models/ISettings";
 import SettingsService from "../service/settings-service";
 import SwitchFormControl from "../components/forms/SwitchFormControl";
+import {ICellPack} from "../models/ICellPack";
+import CellPackSelectItem from "../components/forms/CellPackSelectItem";
 
 function NewGamePage() {
 
@@ -33,12 +35,15 @@ function NewGamePage() {
 
     const [playersNumber, setPlayersNumber] = useState(1)
 
+    const [packs, setPacks] = useState<ICellPack[]>([])
+    const [currentPack, setCurrentPack] = useState(1)
+
     const [typeValues, setTypeValues] = useState<ITypeValue[]>([])
     const [vtValid, setVtValid] = useState(true)
     const [vtLocalInvalid, setVtLocalInvalid] = useState(true)
 
     async function fetchTypes() {
-        let cellsMax = await CellService.getCellCount().then(result => {
+        let cellsMax = await CellService.getCellCount(currentPack).then(result => {
             return result
         })
         let cellTypeArray = await CellService.getCellTypes().then(result => {
@@ -54,6 +59,7 @@ function NewGamePage() {
     }
 
     function initTypeValues(cellTypeArray: ICellType[], max: number) {
+        setTypeValues([])
         cellTypeArray.forEach(cellType => {
             if (cellType.id === 1) {
                 pushToTypeValues({"value": max, "type": cellType})
@@ -67,9 +73,21 @@ function NewGamePage() {
         setTypeValues(prevTypeValues => [...prevTypeValues, newElement]);
     }
 
+    async function fetchPacks() {
+        let packsNew = await CellService.getCellPacks().then(result => {
+            return result
+        })
+        setPacks(packsNew)
+    }
+
     useEffect(() => {
+        fetchPacks()
         fetchTypes()
     }, [])
+
+    useEffect(() => {
+        fetchTypes()
+    }, [currentPack])
 
     useEffect(() => {
         if (cellNumber < grayZoneNumber) {
@@ -114,7 +132,7 @@ function NewGamePage() {
     function handleAdd() {
         let settings: ISettings = {"title": title, "maxCellNumber": cellNumber, "playersNumber": playersNumber,
             "grayZoneNumber": grayZoneNumber, "isShared": isShared, "hasSharedCell": hasSharedCell,
-            "owner": AuthService.getUser(), "typeValues": typeValues}
+            "owner": AuthService.getUser(), "typeValues": typeValues, "packId": currentPack}
 
         SettingsService.saveSettings(settings)
             .then(response => {
@@ -150,6 +168,13 @@ function NewGamePage() {
                                             <hr/>
                                             <StringFormControl label={"Name"} value={title} isLarge={true}
                                                                valid={titleValid} setValue={handleTitleChange}/>
+                                            <Form.Group className="mb-2 mt-2 ng-group">
+                                                <Form.Label className={"ng-label ng-label-md"}>Cell pack</Form.Label>
+                                                <Form.Select value={currentPack} className={"ng-control-container"}
+                                                             onChange={event => setCurrentPack(parseInt(event.target.value))}>
+                                                    {packs.map(pack => <CellPackSelectItem pack={pack} key={pack.id} />)}
+                                                </Form.Select>
+                                            </Form.Group>
                                             <NumberFormControl label={"Number of cells"} value={cellNumber}
                                                                min={1} max={cellMax} isSmall={false}
                                                                valid={true} setValue={setCellNumber}
