@@ -10,12 +10,13 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          POSTGRES_USER: dicerollinguser
+          POSTGRES_PASSWORD: 12345678
+          POSTGRES_DB: dicerolling
+        ports:
+        - 5433:5433
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -25,20 +26,6 @@ jobs:
         java-version: 17
     - name: Install dependencies
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    - name: Install Postgres
-      run: npm ci
-      env:
-        POSTGRES_HOST: postgres
-        POSTGRES_PORT: 5433
-    - name: Install PSQL client
-      run: |
-        apt-get update
-        apt-get install --yes --no-install-recommends postgresql-client
-    - name: Create database
-      run: |
-        psql -h postgres -U postgres -c 'CREATE DATABASE dicerolling;'
-        psql -h postgres -U postgres -c 'CREATE USER dicerollinguser WITH ENCRYPTED PASSWORD '12345678';'
-        psql -h postgres -U postgres -c 'GRANT ALL PRIVILEGES ON DATABASE dicerolling TO dicerollinguser;'
     - name: Run tests and collect coverage
       run: mvn -B test
     - name: Upload coverage to Codecov
