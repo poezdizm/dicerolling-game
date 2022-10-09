@@ -5,7 +5,6 @@ Spring Boot + React.JS app
 Demo: [DiceRolling](http://194.58.103.139)
 
 ### Requirements
-
 - Java 17 + Maven
 - NodeJS v16.17.0 + NPM 8.19.2
 - PostgreSQL DB
