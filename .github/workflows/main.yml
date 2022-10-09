@@ -32,11 +32,11 @@ jobs:
         POSTGRES_HOST: postgres
         POSTGRES_PORT: 5433
     - name: Install PSQL client
-    - run: |
+      run: |
         apt-get update
         apt-get install --yes --no-install-recommends postgresql-client
     - name: Create database
-    - run: |
+      run: |
         psql -h postgres -U postgres -c 'CREATE DATABASE dicerolling;'
         psql -h postgres -U postgres -c 'CREATE USER dicerollinguser WITH ENCRYPTED PASSWORD '12345678';'
         psql -h postgres -U postgres -c 'GRANT ALL PRIVILEGES ON DATABASE dicerolling TO dicerollinguser;'
