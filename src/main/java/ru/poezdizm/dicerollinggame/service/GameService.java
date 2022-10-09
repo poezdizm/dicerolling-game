@@ -26,6 +26,8 @@ public class GameService {
 
     private final SimpMessagingTemplate webSocket;
 
+    private static final String GAME_NOT_FOUND = "Game was not found";
+
     public List<GameSimplifiedModel> getGamesByCurrentUser(String username) {
         return gameRepository.findAllByGamePlayers_Player_Username(username)
                 .stream().map(GameService::mapSimplifiedGame).toList();
@@ -33,7 +35,7 @@ public class GameService {
 
     public GameModel getGame(Long gameId, String username) throws IllegalArgumentException {
         GameEntity game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+                .orElseThrow(() -> new IllegalArgumentException(GAME_NOT_FOUND));
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User was not found"));
 
@@ -166,7 +168,7 @@ public class GameService {
 
     public void deleteGameAndSettings(Long gameId, String username) throws IllegalArgumentException {
         GameEntity gameToDelete = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+                .orElseThrow(() -> new IllegalArgumentException(GAME_NOT_FOUND));
         GameSettingsEntity settings = gameToDelete.getGameSettings();
         if (!Objects.equals(settings.getOwner().getUsername(), username)) {
             throw new IllegalArgumentException("User is not an owner of this game");
@@ -177,7 +179,7 @@ public class GameService {
 
     public void saveRoll(GenericRequest request, String username) throws IllegalArgumentException {
         GameEntity game = gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+                .orElseThrow(() -> new IllegalArgumentException(GAME_NOT_FOUND));
         GameToPlayerEntity player = game.getGamePlayers().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
@@ -200,7 +202,7 @@ public class GameService {
 
     public void savePosition(GenericRequest request, String username) throws IllegalArgumentException {
         GameEntity game = gameRepository.findById(request.getGameId())
-                .orElseThrow(() -> new IllegalArgumentException("Game was not found"));
+                .orElseThrow(() -> new IllegalArgumentException(GAME_NOT_FOUND));
         GameToPlayerEntity player = game.getGamePlayers().stream()
                 .filter(it -> Objects.equals(it.getPlayer().getUsername(), username))
                 .findAny().orElseThrow(() -> new IllegalArgumentException("Player was not found"));
