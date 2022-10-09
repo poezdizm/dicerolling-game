@@ -1,4 +1,4 @@
-name: codecov-CI
+name: ci
 
 on: [push, pull_request]
 
