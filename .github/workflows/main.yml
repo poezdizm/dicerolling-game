@@ -33,9 +33,9 @@ jobs:
         sudo apt-get install --yes --no-install-recommends postgresql-client
     - name: Create database
       run: |
-        sudo psql -h localhost -U postgres -c 'CREATE DATABASE dicerolling;'
-        sudo psql -h localhost -U postgres -c 'CREATE USER dicerollinguser WITH ENCRYPTED PASSWORD '12345678';'
-        sudo psql -h localhost -U postgres -c 'GRANT ALL PRIVILEGES ON DATABASE dicerolling TO dicerollinguser;'
+        sudo psql -h localhost -U postgres -W postgres -c 'CREATE DATABASE dicerolling;'
+        sudo psql -h localhost -U postgres -W postgres -c 'CREATE USER dicerollinguser WITH ENCRYPTED PASSWORD '12345678';'
+        sudo psql -h localhost -U postgres -W postgres -c 'GRANT ALL PRIVILEGES ON DATABASE dicerolling TO dicerollinguser;'
     - name: Set up JDK 18
       uses: actions/setup-java@v1
       with:
