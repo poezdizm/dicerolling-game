@@ -15,6 +15,11 @@ public class MainRestController {
 
     private final UserStatsService statsService;
 
+    @GetMapping("/health")
+    public String healthCheck() {
+        return "healthy";
+    }
+
     @GetMapping("/stats")
     public UserStatModel getStats(Principal principal) {
         return statsService.getStats(principal.getName());
